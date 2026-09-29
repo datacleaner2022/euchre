@@ -16,7 +16,7 @@
   --rim:0 0 0 10px #6b4423,0 0 0 13px #3e2612,0 12px 30px rgba(0,0,0,.55),inset 0 0 40px rgba(0,0,0,.45);
   --felt-ink:#f4f1e8;
   --card-face:#fffdf6; --card-ink:#111; --red:#c62828; --card-edge:none;
-  --card-back:repeating-linear-gradient(45deg,#1f3f8f 0 6px,#2b54b8 6px 12px); --card-back-edge:2px solid #fff;
+  --card-back-edge:2px solid #fff;                             /* --card-back: see the 3D layer */
   --soft-red:#ff8a8a;                                          /* red suits on dark panels */
   --turn:#fff; --chip-turn-bg:rgba(255,255,255,.9); --chip-turn-ink:#111;
   --dot:#fff; --dot-won:#34d17a;
@@ -74,7 +74,7 @@ h1{margin:.2em 0;font-size:2rem;font-family:var(--display)}
 /* order circles: 1st, 2nd, 3rd, D(ealer), filled with the player's team color */
 .ord{display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;border-radius:50%;
   font-weight:800;font-size:.8rem;color:#fff;flex:none;border:2px solid rgba(255,255,255,.85);vertical-align:middle}
-.ord.t0{background:var(--t0)} .ord.t1{background:var(--t1)}
+.ord.t0{background-color:var(--t0)} .ord.t1{background-color:var(--t1)}
 .me-pod{display:flex;align-items:center;gap:8px;background:var(--panel);border-radius:var(--pill,99px);padding:4px 12px 4px 4px;font-weight:700}
 .pod .pn{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px}
 .badge{display:inline-block;font-size:.7rem;font-weight:700;padding:1px 6px;border-radius:99px;background:var(--gold);color:#222;margin:2px 2px 0}
@@ -123,11 +123,29 @@ h1{margin:.2em 0;font-size:2rem;font-family:var(--display)}
 .h.score{opacity:.85;font-style:italic}
 .h.game{font-weight:800;color:var(--gold)}
 
-.card{width:var(--card-w);height:var(--card-h);background:var(--card-face);color:var(--card-ink);border:var(--card-edge);border-radius:8px;position:relative;
-  box-shadow:0 2px 6px rgba(0,0,0,.45);user-select:none;flex:none}
+/* cards: paper sheen over the theme's face colour, rounded corners, a hint of thickness */
+.card{width:var(--card-w);height:var(--card-h);color:var(--card-ink);border:var(--card-edge);border-radius:9px;position:relative;
+  background:linear-gradient(155deg,rgba(255,255,255,.4) 0%,rgba(255,255,255,0) 40%,rgba(0,0,0,.05) 100%),var(--card-face);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.7),0 1px 0 rgba(0,0,0,.14),0 2px 0 rgba(0,0,0,.08),0 8px 16px -4px rgba(0,0,0,.5);
+  user-select:none;flex:none}
 .card.red{color:var(--red)}
-.card .cr{position:absolute;top:4px;left:6px;font-weight:700;font-size:calc(var(--card-w)*.27);line-height:1}
+/* corner indices: top-left, and the same rotated in the bottom-right like a real card */
+.card .cr{position:absolute;top:4px;left:5px;font-weight:800;font-size:calc(var(--card-w)*.22);line-height:1;text-align:center;letter-spacing:-.06em}
+.card .cr.br{top:auto;left:auto;right:5px;bottom:4px;transform:rotate(180deg)}
 .card .cs{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:calc(var(--card-w)*.6);opacity:.9}
+/* 9 and 10 show real pip layouts; J/Q/K get a framed court figure; the Ace gets one big suit */
+.card:is([data-r="9"],[data-r="10"],[data-r="J"],[data-r="Q"],[data-r="K"]) .cs{display:none}
+.card[data-r="A"] .cs{font-size:calc(var(--card-w)*.74);opacity:1;filter:drop-shadow(0 1px 0 rgba(255,255,255,.5)) drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+.card .pips{position:absolute;inset:0;pointer-events:none}
+.card .pips i{position:absolute;transform:translate(-50%,-50%);font-style:normal;font-size:calc(var(--card-w)*.19);line-height:1}
+.card .pips i.up{transform:translate(-50%,-50%) rotate(180deg)}
+.card .court{position:absolute;inset:19% 27%;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:4px;
+  border:1.5px solid color-mix(in srgb,currentColor 50%,transparent);
+  background:linear-gradient(160deg,color-mix(in srgb,currentColor 18%,transparent),color-mix(in srgb,currentColor 5%,transparent));
+  box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--card-face) 70%,transparent)}
+.card .court b{font-size:calc(var(--card-w)*.4);line-height:1;font-weight:400;font-family:'Segoe UI Symbol','DejaVu Sans','Noto Sans Symbols 2',serif}
+.card .court i{font-style:normal;font-size:calc(var(--card-w)*.16);line-height:1.1}
+.card.mini :is(.pips,.court,.cr.br){display:none}
 .card.back{background:var(--card-back);border:var(--card-back-edge)}
 .card.dim{filter:brightness(.6)}
 .card.legal{cursor:pointer;transition:transform .12s}
@@ -316,6 +334,104 @@ label.alone{display:flex;gap:6px;align-items:center;background:var(--panel);padd
   #chat,#history{bottom:auto;top:auto;position:static;width:auto;margin:8px}
 }
 
+/* ============================ 3D & LIGHTING ============================
+   Textures are generated SVG noise (no image files); themes can override any of these tokens. */
+:root{
+  --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --woodgrain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='90'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006 .28' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .16  0 0 0 0 .08  0 0 0 0 .02  1.4 0 0 0 -.45'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E");
+  --spot:rgba(255,255,255,.09); --vignette:rgba(0,0,0,.55);
+  --plate:rgba(0,0,0,.28); --tilt:32deg;
+  --card-back:radial-gradient(ellipse 34% 26% at 50% 50%,rgba(255,255,255,.22) 0 60%,transparent 64%),
+    repeating-linear-gradient(45deg,rgba(255,255,255,.13) 0 1.5px,transparent 1.5px 6px),
+    repeating-linear-gradient(-45deg,rgba(255,255,255,.13) 0 1.5px,transparent 1.5px 6px),
+    linear-gradient(160deg,#2b50b8,#152a6e);
+}
+/* stage lighting: a soft spotlight over the table, darker toward the edges of the screen */
+#stage-light{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse 55% 45% at 50% 42%,var(--spot),transparent 70%),
+             radial-gradient(ellipse 120% 100% at 50% 45%,transparent 55%,var(--vignette) 100%)}
+
+/* the table tilts away from you; cards played onto it lie in its perspective */
+#arena{perspective:1000px;perspective-origin:50% 20%}
+#felt{transform:rotateX(var(--tilt));transform-origin:50% 55%;
+  filter:drop-shadow(0 9px 0 rgba(0,0,0,.42)) drop-shadow(0 30px 24px rgba(0,0,0,.5))}
+#felt::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(ellipse 70% 55% at 50% 30%,rgba(255,255,255,.12),transparent 70%),var(--noise);
+  background-size:auto,180px 180px;mix-blend-mode:overlay;opacity:.5}
+#center{position:relative;z-index:1}
+.trick .card:not(.win){box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 1px 0 rgba(0,0,0,.18),0 2px 0 rgba(0,0,0,.1),0 12px 18px -6px rgba(0,0,0,.6)}
+
+/* your hand: lift a playable card toward you on hover */
+#hand .card.legal:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 1px 0 rgba(0,0,0,.14),0 22px 28px -8px rgba(0,0,0,.6)}
+
+/* frosted glass panels */
+.panel,.pod,.seat,.me-pod,#chat,#history{-webkit-backdrop-filter:blur(10px) saturate(1.3);backdrop-filter:blur(10px) saturate(1.3);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 10px 28px -10px rgba(0,0,0,.55)}
+.seat{transition:transform .2s}
+.seat:hover{transform:translateY(-3px)}
+
+/* chunky 3D push buttons (primary + secondary) */
+button:where(:not(.sec,.thopt,.ptab,.iconbtn)):where(:not(.reactbar button,#picker button)){
+  background-image:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,0) 55%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 3px 0 color-mix(in srgb,var(--gold) 50%,#000),0 6px 14px -3px rgba(0,0,0,.45);
+  transition:transform .08s,box-shadow .08s}
+button:where(:not(.sec,.thopt,.ptab,.iconbtn)):where(:not(.reactbar button,#picker button)):active:not(:disabled){
+  transform:translateY(3px);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 0 0 color-mix(in srgb,var(--gold) 50%,#000),0 2px 5px rgba(0,0,0,.4)}
+button.sec{box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 2px 0 rgba(0,0,0,.25);transition:transform .08s}
+button.sec:active:not(:disabled){transform:translateY(2px)}
+
+/* scoreboard: team-tinted plates with engraved score digits */
+.tm.t0{box-shadow:inset 110px 0 70px -60px color-mix(in srgb,var(--t0) 55%,transparent),inset 0 1px 0 rgba(255,255,255,.08)}
+.tm.t1{box-shadow:inset -110px 0 70px -60px color-mix(in srgb,var(--t1) 55%,transparent),inset 0 1px 0 rgba(255,255,255,.08)}
+.tm .pts{background:var(--plate);border-radius:10px;padding:4px 8px;box-shadow:inset 0 2px 5px rgba(0,0,0,.5),0 1px 0 rgba(255,255,255,.1)}
+/* order circles and trick dots look like glossy beads */
+.ord{background-image:radial-gradient(circle at 35% 28%,rgba(255,255,255,.6) 0 12%,rgba(255,255,255,0) 45%);box-shadow:0 2px 4px rgba(0,0,0,.45),inset 0 -2px 3px rgba(0,0,0,.25)}
+.dots i{box-shadow:inset 0 -2px 2px rgba(0,0,0,.25),inset 0 1px 1px rgba(255,255,255,.6)}
+.dots i.won{box-shadow:inset 0 -2px 2px rgba(0,0,0,.2),inset 0 1px 1px rgba(255,255,255,.7),0 0 8px var(--dot-won)}
+
+/* avatars (DiceBear): initial letter shows underneath until / unless the picture loads */
+.av{--avc:var(--t0);position:relative;display:inline-flex;align-items:center;justify-content:center;flex:none;width:30px;height:30px;
+  border-radius:50%;overflow:hidden;vertical-align:middle;color:#fff;font-weight:800;font-size:.85rem;font-family:var(--font);text-shadow:none;
+  background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.45),transparent 60%),var(--avc);
+  box-shadow:0 0 0 2px var(--avc),0 3px 8px rgba(0,0,0,.45)}
+.av.t1{--avc:var(--t1)}
+.av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.av.lg{width:46px;height:46px;font-size:1.1rem}
+.avwrap{position:relative;display:inline-flex;flex:none}
+.avwrap .ord{position:absolute;right:-7px;bottom:-5px;font-size:.62rem;width:1.65em;height:1.65em}
+.pod .pn{display:flex;align-items:center;justify-content:center;gap:9px}
+.seat .nm{display:flex;align-items:center;gap:10px}
+
+/* title screen: four aces floating in 3D above an extruded title */
+#hero{height:150px;display:flex;justify-content:center;align-items:flex-end;perspective:900px;--card-w:74px;--card-h:104px}
+#hero .card{margin:0 -12px;transform-origin:50% 130%;transform:rotate(var(--rot)) translateY(var(--y));animation:heroFloat 5s ease-in-out infinite;animation-delay:var(--delay)}
+@keyframes heroFloat{0%,100%{transform:rotate(var(--rot)) translateY(var(--y)) rotateY(-14deg)}50%{transform:rotate(var(--rot)) translateY(calc(var(--y) - 10px)) rotateY(14deg)}}
+#home h1{font-size:clamp(2.1rem,6.5vw,3.4rem);letter-spacing:.02em;
+  text-shadow:0 1px 0 rgba(0,0,0,.28),0 2px 0 rgba(0,0,0,.26),0 3px 0 rgba(0,0,0,.24),0 4px 0 rgba(0,0,0,.22),0 10px 18px rgba(0,0,0,.45)}
+#home .panel{transform:perspective(900px) rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg));transition:transform .25s ease-out}
+.credits{max-width:560px;margin:10px auto 24px;font-size:.75rem;line-height:1.6}
+.credits a{color:inherit}
+
+/* classic theme: a real wooden rail with grain around the felt */
+html[data-theme="classic"] #felt{border:14px solid transparent;
+  background:var(--felt-bg) padding-box,var(--woodgrain) 0 0/420px 90px border-box,linear-gradient(180deg,#8d5d2e,#5f3a18 55%,#3f250e) border-box;
+  box-shadow:0 0 0 2px #24140a,0 0 0 3px rgba(255,255,255,.06),inset 0 0 0 2px rgba(0,0,0,.35),inset 0 0 44px rgba(0,0,0,.5)}
+
+/* per-theme lighting and texture tweaks */
+html[data-theme="light"]{--spot:rgba(255,255,255,.6);--vignette:rgba(15,23,42,.12);--plate:rgba(15,23,42,.06)}
+html[data-theme="cat"]{--spot:rgba(255,255,255,.45);--vignette:rgba(155,90,120,.14);--plate:#fbe3ec}
+html[data-theme="mario"]{--spot:transparent;--vignette:transparent;--plate:rgba(0,0,0,.25)}
+html[data-theme="mario"] #felt::after{display:none}
+html:is([data-theme="cat"],[data-theme="light"]) .tm .pts{box-shadow:inset 0 2px 4px rgba(0,0,0,.12)}
+
+@media (max-width:640px){
+  :root{--tilt:18deg}
+  #hero{height:118px;--card-w:58px;--card-h:82px}
+  .av{width:26px;height:26px;font-size:.75rem}
+  .pod .pn{gap:3px}
+}
+@media (prefers-reduced-motion:reduce){ #hero .card{animation:none} #home .panel{transform:none} }
+
 /* ============================ THEME PICKER ============================ */
 #themeMenu{position:fixed;z-index:50;width:260px;background:var(--modal);color:var(--ink);border:1px solid var(--line);
   border-radius:var(--r);padding:8px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
@@ -330,6 +446,14 @@ label.alone{display:flex;gap:6px;align-items:center;background:var(--panel);padd
 .swatch{display:inline-block;width:.8em;height:.8em;border-radius:50%;margin-right:6px;vertical-align:-1px}
 .swatch.t0{background:var(--t0)} .swatch.t1{background:var(--t1)}
 .theme-home{margin-top:10px;text-align:center}
+.netcfg{margin-top:12px;font-size:.85rem;border-top:1px solid var(--line);padding-top:10px}
+.netcfg summary{cursor:pointer;font-weight:600;opacity:.9}
+.netcfg p,.netcfg ol{margin:8px 0;line-height:1.45}
+.netcfg ol{padding-left:1.3em}
+.netcfg a{color:inherit}
+.netcfg .row{margin:8px 0}
+.netcfg input{flex:1;min-width:120px}
+#turnStatus{flex:1;min-width:0}
 
 /* ============================ THEMES ============================ */
 /* ---- Dark mode ---- */
@@ -495,7 +619,8 @@ html[data-theme="cat"] .pod{margin-top:12px}
 html[data-theme="cat"] #felt{outline:3px dashed rgba(255,255,255,.85);outline-offset:-14px}
 html[data-theme="cat"] #felt::before{color:#a0659b;opacity:.14}
 /* kitty cards: a cat for each rank in the middle, rank + suit stay in the corner */
-html[data-theme="cat"] .card .cs{font-size:0}
+html[data-theme="cat"] .card .cs{font-size:0;display:flex}
+html[data-theme="cat"] .card :is(.pips,.court,.cr.br){display:none}
 html[data-theme="cat"] .card .cs::before{font-size:calc(var(--card-w)*.5)}
 html[data-theme="cat"] .card[data-r="9"] .cs::before{content:'🐱'}
 html[data-theme="cat"] .card[data-r="10"] .cs::before{content:'😺'}
@@ -597,7 +722,8 @@ html[data-theme="space"] :is(h1,.code,.tm .pts,#status.mine,.banner .big){text-s
 html[data-theme="space"] button:not(.sec):not(.thopt):not(#picker button):not(.reactbar button){box-shadow:0 0 12px rgba(92,225,255,.5)}
 html[data-theme="space"] #felt::before{color:#cfe8ff;opacity:.08}
 /* astronaut cards: a space emoji per rank; rank + suit stay in the corners */
-html[data-theme="space"] .card .cs{font-size:0}
+html[data-theme="space"] .card .cs{font-size:0;display:flex}
+html[data-theme="space"] .card :is(.pips,.court,.cr.br){display:none}
 html[data-theme="space"] .card .cs::before{font-size:calc(var(--card-w)*.5)}
 html[data-theme="space"] .card[data-r="9"] .cs::before{content:'🪐'}
 html[data-theme="space"] .card[data-r="10"] .cs::before{content:'🌙'}
@@ -621,11 +747,13 @@ try{ document.documentElement.dataset.theme = localStorage.getItem('euchre_theme
 </head>
 <body>
 
+<div id="stage-light" aria-hidden="true"></div>
 <div id="toast" class="hidden"></div>
 
 <!-- HOME -->
 <div id="home" class="wrap">
-  <h1>♠ ♥ Euchre with Friends ♦ ♣</h1>
+  <div id="hero" aria-hidden="true"></div>
+  <h1>Euchre with Friends</h1>
   <div class="muted">4 players, 2 teams. Empty seats can be filled with bots.</div>
   <div class="panel">
     <div class="row"><input id="nameIn" type="text" maxlength="16" placeholder="Your name" autocomplete="off"></div>
@@ -637,10 +765,31 @@ try{ document.documentElement.dataset.theme = localStorage.getItem('euchre_theme
     </div>
     <div id="homeErr" class="err"></div>
     <div class="theme-home"><button class="sec" data-do="themes">🎨 Change theme</button></div>
+    <details class="netcfg" id="netcfg">
+      <summary>🔌 Playing from different networks?</summary>
+      <p>If a friend on another network (a different house, or phone data) gets stuck connecting, one of your
+        networks is blocking a direct link. A free relay fixes it:</p>
+      <ol>
+        <li>Create a free account at <a href="https://www.metered.ca/tools/openrelay/" target="_blank" rel="noopener">Metered Open Relay</a> (20&nbsp;GB/month free).</li>
+        <li>In your dashboard, copy your <b>app name</b> (the part before <code>.metered.live</code>) and your <b>TURN API key</b>.</li>
+        <li>Paste them here and press <b>Save &amp; test</b>. The host should add it; friends can too.</li>
+      </ol>
+      <div class="row"><input id="turnApp" type="text" placeholder="App name" autocomplete="off" spellcheck="false">
+        <input id="turnKey" type="text" placeholder="TURN API key" autocomplete="off" spellcheck="false"></div>
+      <div class="row"><button type="button" class="sec" id="turnSave">Save &amp; test</button><span id="turnStatus" class="muted"></span></div>
+    </details>
   </div>
   <p class="muted" style="max-width:520px;margin:20px auto">
     The host's browser runs the game, so the host needs to keep the tab open.
     Friends connect directly to it with the room code (or the shared link).
+  </p>
+  <p class="credits muted">
+    Avatars by <a href="https://www.dicebear.com" target="_blank" rel="noopener">DiceBear</a>
+    (<a href="https://www.dicebear.com/styles/notionists/" target="_blank" rel="noopener">Notionists</a> by Zoish &amp;
+    <a href="https://www.dicebear.com/styles/voxel-bot/" target="_blank" rel="noopener">Voxel Bot</a>, CC0) ·
+    GIFs by <a href="https://giphy.com" target="_blank" rel="noopener">GIPHY</a> ·
+    Multiplayer by <a href="https://peerjs.com" target="_blank" rel="noopener">PeerJS</a> ·
+    Fonts by <a href="https://fonts.google.com" target="_blank" rel="noopener">Google Fonts</a>
   </p>
 </div>
 
@@ -1280,21 +1429,95 @@ function send(msg){
   else toast('Not connected…');
 }
 
-function startHost(attempt=0){
-  homeErr(''); $('#hostBtn').disabled=true;
+/* ---- connection setup ----
+   Players connect browser-to-browser. That works on most home networks using the public STUN servers
+   below, but some networks (phone data, many routers, school/work Wi-Fi) block direct links. Then a
+   relay (TURN server) is needed.
+   Relay credentials come from your own small Cloudflare Worker (turn-worker.js). It keeps the Metered
+   Secret key server-side and hands out credentials that expire after 24 hours, only to your site.
+   No keys belong in this file. Without a Worker, a host can still paste a Metered app name + API key
+   into the "Playing from different networks?" panel (saved in that browser only). */
+const TURN_ENDPOINT='';      // your Worker's address + /turn, e.g. 'https://euchre-turn.yourname.workers.dev/turn'
+const FORCE_RELAY=/[?&]relay\b/.test(location.search);            // testing: allow relayed connections only
+const STUN_SERVERS=[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']},{urls:'stun:stun.cloudflare.com:3478'}];
+const CONNECT_TIMEOUT=15000;
+
+const turnEndpoint = () => { const u=store.get('euchre_turn_endpoint')||TURN_ENDPOINT; return /^https:\/\/[^\s"'<>]+$/.test(u)?u:''; };
+function turnSettings(){                          // manual fallback: saved in this browser only
+  const app=String(store.get('euchre_turn_app')||'bert-euchre').trim().toLowerCase();                 // built in (public)
+  const key=String(store.get('euchre_turn_key')||'32defd9b8323f23a78f061dc7e5c85fca057').trim();  // built in (public)
+  return /^[a-z0-9_-]{1,63}$/.test(app) && /^[\w-]{8,128}$/.test(key) ? {app,key} : null;
+}
+async function fetchJson(url,ms=6000){
+  const ctl=new AbortController(), t=setTimeout(()=>ctl.abort(),ms);
+  try{ return await fetch(url,{signal:ctl.signal,cache:'no-store',credentials:'omit'}); } finally{ clearTimeout(t); }
+}
+let icePromise=null;
+function getIceServers(){                        // fetched once per page load
+  if(!icePromise) icePromise=(async()=>{
+    const ep=turnEndpoint();
+    if(ep){
+      try{
+        const r=await fetchJson(ep);
+        const body=await r.json().catch(()=>({}));
+        if(!r.ok) throw new Error(body.error||'Relay server error '+r.status);
+        if(!Array.isArray(body.iceServers)||!body.iceServers.length) throw new Error('Relay server sent no servers');
+        return {servers:[...STUN_SERVERS,...body.iceServers],relay:true,source:'server'};
+      }catch(e){
+        console.warn('Relay server failed:',e);
+        if(!turnSettings()) return {servers:STUN_SERVERS,relay:false,
+          error:e.name==='AbortError'||e instanceof TypeError?"Couldn't reach the relay server":String(e.message||e)};
+      }
+    }
+    const t=turnSettings(); if(!t) return {servers:STUN_SERVERS,relay:false};
+    try{
+      const r=await fetch(`https://${t.app}.metered.live/api/v1/turn/credentials?apiKey=${encodeURIComponent(t.key)}`);
+      if(!r.ok) throw new Error(r.status===401||r.status===403?'Metered rejected that API key':'Metered error '+r.status);
+      const list=await r.json();
+      if(!Array.isArray(list)||!list.length) throw new Error('Metered returned no relay servers');
+      return {servers:[...STUN_SERVERS,...list],relay:true,source:'browser'};
+    }catch(e){
+      console.warn('Relay setup failed:',e);
+      return {servers:STUN_SERVERS,relay:false,error:e instanceof TypeError?"Couldn't reach Metered — check the app name":String(e.message||e)};
+    }
+  })();
+  return icePromise;
+}
+async function peerOptions(){
+  const ice=await getIceServers();
+  return {config:{iceServers:ice.servers,iceTransportPolicy:FORCE_RELAY?'relay':'all'}};
+}
+// Is this connection going straight between the two browsers, or through the relay?
+async function connectionRoute(c){
+  try{
+    const pc=c.peerConnection; if(!pc) return null;
+    const stats=await pc.getStats(); let pair=null;
+    stats.forEach(r=>{ if(r.type==='transport' && r.selectedCandidatePairId) pair=stats.get(r.selectedCandidatePairId); });
+    if(!pair) stats.forEach(r=>{ if(r.type==='candidate-pair' && r.nominated && r.state==='succeeded') pair=r; });
+    const local=pair && stats.get(pair.localCandidateId), remote=pair && stats.get(pair.remoteCandidateId);
+    if(!local) return null;
+    return local.candidateType==='relay' || (remote && remote.candidateType==='relay') ? 'relay' : 'direct';
+  }catch(e){ return null; }
+}
+const serverTrouble = t => ['network','server-error','socket-error','socket-closed'].includes(t);
+
+async function startHost(attempt=0){
+  homeErr('Starting…'); $('#hostBtn').disabled=true;
   const code=randCode();
-  const p=new Peer('euchre-'+code);
+  const p=new Peer('euchre-'+code, await peerOptions());
   p.on('open',()=>{
     peer=p; role='host';
     room=new Room(code,myToken,deliver);
     room.join(myToken,myName());
     store.sset('euchre_room',null);
-    $('#hostBtn').disabled=false;
+    $('#hostBtn').disabled=false; homeErr('');
   });
   p.on('error',e=>{
     if(e.type==='unavailable-id' && attempt<6){ p.destroy(); startHost(attempt+1); return; }
+    if(role==='host' && e.type==='peer-unavailable') return;          // a guest's leftover request; harmless
     $('#hostBtn').disabled=false;
-    homeErr('Could not start a game: '+(e.type||e.message));
+    homeErr(serverTrouble(e.type) ? "Couldn't reach the matchmaking server — check your internet connection and try again."
+                                  : 'Could not start a game: '+(e.type||e.message));
   });
   p.on('connection',c=>{
     c.on('data',m=>{
@@ -1312,20 +1535,40 @@ function startHost(attempt=0){
   p.on('disconnected',()=>{ try{p.reconnect();}catch(e){} });
 }
 
-function joinGame(code,auto){
+let connRoute=null;                           // 'direct' | 'relay' once connected (shown to guests in the lobby)
+async function joinGame(code,auto){
   code=code.toUpperCase().trim();
   if(code.length!==4){ homeErr('Enter the 4-letter room code'); return; }
   homeErr(auto?'Reconnecting…':'Connecting…'); $('#joinBtn').disabled=true;
   clearTimeout(reconnectTimer);
   if(peer){ try{peer.destroy();}catch(e){} }
-  const p=new Peer();
+  const ice=await getIceServers();
+  const p=new Peer(await peerOptions());
   peer=p; role='guest';
   p.on('open',()=>{
     const c=p.connect('euchre-'+code,{reliable:true});
     hostConn=c;
-    c.on('open',()=>{
+    // Give up (with an explanation) if the two browsers can't find a way to reach each other.
+    const fail=()=>{
+      if(hostConn!==c) return;
+      clearTimeout(failTimer); hostConn=null; try{c.close();}catch(e){}
+      $('#joinBtn').disabled=false;
+      const why = ice.relay || FORCE_RELAY
+        ? "Couldn't connect to the host, even through the relay. Check both internet connections and try again."
+        : "Couldn't connect to the host. Your networks are probably blocking a direct connection — "+
+          "set up the free relay under “Playing from different networks?” below.";
+      if(auto && S){ toast('Still trying to reconnect…'); reconnectTimer=setTimeout(()=>joinGame(code,true),4000); }
+      else { store.sset('euchre_room',null); S=null; render(); homeErr(why); }
+    };
+    const failTimer=setTimeout(fail,CONNECT_TIMEOUT);
+    c.on('iceStateChanged',st=>{ if(st==='failed') fail(); });
+    c.on('open',async()=>{
+      clearTimeout(failTimer);
       store.sset('euchre_room',code);
       c.send({t:'join',token:myToken,name:myName()});
+      connRoute=await connectionRoute(c);
+      if(!auto && connRoute) toast(connRoute==='relay'?'Connected through the relay ✓':'Connected directly ✓');
+      if(S) render();
     });
     c.on('data',onMessage);
     c.on('close',()=>{
@@ -1338,10 +1581,11 @@ function joinGame(code,auto){
   p.on('error',e=>{
     $('#joinBtn').disabled=false;
     if(e.type==='peer-unavailable'){
-      store.sset('euchre_room',null); S=null; render();
+      hostConn=null; store.sset('euchre_room',null); S=null; render();
       homeErr('No game found with that code. Is the host still online?');
     } else if(auto) reconnectTimer=setTimeout(()=>joinGame(code,true),3000);
-    else homeErr('Connection problem: '+(e.type||e.message));
+    else homeErr(serverTrouble(e.type) ? "Couldn't reach the matchmaking server — check your internet connection and try again."
+                                       : 'Connection problem: '+(e.type||e.message));
   });
 }
 
@@ -1569,9 +1813,18 @@ function sortHand(hand,trump){
   const pw=c=>trump? (power(c,trump,c.s)>=0 && eff(c,trump)===trump ? power(c,trump,c.s) : ORDER[c.r]) : ORDER[c.r];
   return [...hand].sort((a,b)=>grp(a)-grp(b) || pw(b)-pw(a));
 }
+// Pip positions (left%, top%) for the number cards; pips below the middle are drawn upside down, like a real deck.
+const PIPS={
+  '9': [[39,20],[61,20],[39,40],[61,40],[50,50],[39,60],[61,60],[39,80],[61,80]],
+  '10':[[39,20],[61,20],[50,31],[39,42],[61,42],[39,58],[61,58],[50,69],[39,80],[61,80]]
+};
+const COURT={J:'♞',Q:'♛',K:'♚'};                   // chess figures stand in for the court portraits
 function cardEl(c,cls='',attrs=''){
-  const red=c.s==='H'||c.s==='D';
-  return `<div class="card ${red?'red':''} ${cls}" data-r="${c.r}" ${attrs}><div class="cr">${c.r}<br>${SYM[c.s]}</div><div class="cs" data-s="${SYM[c.s]}">${SYM[c.s]}</div></div>`;
+  const red=c.s==='H'||c.s==='D', s=SYM[c.s];
+  const art = PIPS[c.r] ? `<div class="pips">${PIPS[c.r].map(([x,y])=>`<i style="left:${x}%;top:${y}%"${y>50?' class="up"':''}>${s}</i>`).join('')}</div>`
+            : COURT[c.r] ? `<div class="court"><b>${COURT[c.r]}</b><i>${s}</i></div>` : '';
+  return `<div class="card ${red?'red':''} ${cls}" data-r="${c.r}" ${attrs}><div class="cr">${c.r}<br>${s}</div>${art}`+
+         `<div class="cs" data-s="${s}">${s}</div><div class="cr br">${c.r}<br>${s}</div></div>`;
 }
 const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const suitBtnClass = s => (s==='H'||s==='D')?'red':'';
@@ -1622,7 +1875,7 @@ function renderLobby(){
     const s=S.seats[i]; const mine=S.me===i;
     let body='';
     if(s){
-      body=`<div class="nm">${s.bot?'🤖 ':''}${esc(s.name)}${mine?' (you)':''}${!s.online?' <span class="muted">(offline)</span>':''}</div>`;
+      body=`<div class="nm">${avatar(i,s,'lg')}<span>${s.bot?'🤖 ':''}${esc(s.name)}${mine?' (you)':''}${!s.online?' <span class="muted">(offline)</span>':''}</span></div>`;
       if(mine) body+=`<button class="sec" data-do="stand">Stand up</button>`;
       else if(s.bot && S.isHost) body+=`<button class="sec" data-do="bot" data-seat="${i}" data-on="0">Remove bot</button>`;
     } else {
@@ -1631,7 +1884,7 @@ function renderLobby(){
     }
     return `<div class="seat ${mine?'me':''}" style="border-left:6px solid var(--t${i%2})"><div class="team"><span class="swatch t${i%2}"></span>Team ${i%2+1} · Seat ${i+1}</div>${body}</div>`;
   }).join('');
-  $('#lobbySeats').innerHTML=html;
+  setHtml($('#lobbySeats'),html);
   $('#lobbyActions').innerHTML = S.isHost
     ? `<button data-do="start">${S.me>=0?'Start game':S.seats.some(s=>s&&!s.bot)?'Start game (I\'ll watch)':'Start — watch the bots play'}</button>
        <label class="alone"><input type="checkbox" id="botChatChk" ${S.botChat?'checked':''}> Bots chat</label>`
@@ -1639,8 +1892,29 @@ function renderLobby(){
   $('#lobbyNote').textContent = S.isHost
     ? 'Partners sit across from each other (Team 1 = seats 1 & 3, Team 2 = seats 2 & 4). Empty seats become bots when you start. First to 10 wins. Don\'t sit down if you just want to watch.'
     : '';
-  $('#lobbyWatchers').textContent = S.watchers.length ? 'Watching: '+S.watchers.join(', ') : '';
+  $('#lobbyWatchers').textContent = (S.watchers.length ? 'Watching: '+S.watchers.join(', ') : '') +
+    (role==='guest' && connRoute ? (S.watchers.length?' · ':'')+'Your connection: '+(connRoute==='relay'?'through the relay 🔁':'direct ⚡') : '');
 }
+
+// Avatars from DiceBear (CC0 styles): illustrated people for humans, voxel robots for bots.
+// The seed is a hash of the player's name, so the same name always gets the same face and the
+// name itself is never sent to DiceBear.
+function nameSeed(name){
+  let h=0x811c9dc5;
+  for(const ch of String(name).toLowerCase()){ h^=ch.codePointAt(0); h=Math.imul(h,16777619)>>>0; }
+  return h.toString(36);
+}
+function avatarUrl(s){
+  return s.bot && !s.wasHuman
+    ? `https://api.dicebear.com/10.x/voxel-bot/svg?seed=${nameSeed(s.name)}`
+    : `https://api.dicebear.com/10.x/notionists/svg?seed=${nameSeed(s.name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+}
+function avatar(seat,s,cls=''){
+  const initial=esc((String(s.name||'?').trim()[0]||'?').toUpperCase());
+  return `<span class="av t${seat%2} ${cls}">${initial}<img src="${avatarUrl(s)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()"></span>`;
+}
+// Only replace an element's HTML when it changed (avoids avatar flicker on every update).
+function setHtml(el,html){ if(el._html!==html){ el.innerHTML=html; el._html=html; } }
 
 // Position in the order of play for this hand: 1 = left of dealer (bids & leads first) … D = dealer.
 function ordCircle(seat,g){
@@ -1658,7 +1932,7 @@ function pod(seat,g){
     ? sortHand(g.hands[seat],g.trump).map(c=>cardEl(c,'mini')).join('')      // watching bots: face-up
     : Array.from({length:g.counts[seat]},()=>'<div class="card back"></div>').join('');
   return `<div class="pod ${g.turn===seat?'turn':''} ${out?'out':''}">
-    <div class="pn">${ordCircle(seat,g)} ${s.bot?'🤖 ':''}${esc(s.name)}${!s.online?' ⚠':''}</div>
+    <div class="pn"><span class="avwrap">${avatar(seat,s)}${ordCircle(seat,g)}</span><span>${esc(s.name)}${!s.online?' ⚠':''}</span></div>
     <div>${b.join('')}</div>
     <div class="backs">${backs}</div>
     ${S.isHost && !s.bot && seat!==S.me && !s.online ? `<button class="sec" style="margin-top:6px;padding:.2em .6em" data-do="bot" data-seat="${seat}" data-on="1">Bot takes over</button>`:''}
@@ -1671,9 +1945,9 @@ const shown={scores:null,tk:null,trick:new Set(),centerKey:null,handHtml:null,me
 function renderTable(){
   const g=S.game, base=S.me>=0?S.me:0;
   const at=rel=>(base+rel)%4;
-  $('#seat-top').innerHTML=pod(at(2),g);
-  $('#seat-left').innerHTML=pod(at(1),g);
-  $('#seat-right').innerHTML=pod(at(3),g);
+  setHtml($('#seat-top'),pod(at(2),g));
+  setHtml($('#seat-left'),pod(at(1),g));
+  setHtml($('#seat-right'),pod(at(3),g));
 
   // top scoreboard: Team 1 (blue) | trump + order of play | Team 2 (orange)
   const tk=t=>g.tricksWon[t]+g.tricksWon[t+2];
@@ -1706,7 +1980,7 @@ function renderTable(){
   // my own position, above my hand
   // (watchers see the bottom seat's player here instead)
   const meHtml = S.me>=0
-    ? `<div class="me-pod ${g.turn===S.me?'turn':''}">${ordCircle(S.me,g)} You${g.maker===S.me?` <span class="badge">${g.alone?'Alone ':'Maker '}${SYM[g.trump]}</span>`:''}</div>`
+    ? `<div class="me-pod ${g.turn===S.me?'turn':''}"><span class="avwrap">${avatar(S.me,S.seats[S.me])}${ordCircle(S.me,g)}</span> You${g.maker===S.me?` <span class="badge">${g.alone?'Alone ':'Maker '}${SYM[g.trump]}</span>`:''}</div>`
     : pod(base,g);
   if(meHtml!==shown.meHtml){ $('#mePod').innerHTML=meHtml; shown.meHtml=meHtml; }   // keeps the turn pulse smooth
 
@@ -1991,8 +2265,55 @@ async function loadGifs(){
 document.addEventListener('click',e=>{ if(!e.target.closest('#picker,[data-do=picker]')) closePicker(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closePicker(); });
 
+/* ---- relay (TURN) setup panel ---- */
+// Ask the relay for a server address: if it hands back a "relay" candidate, friends on blocked networks can connect.
+async function testRelay(){
+  const ice=await getIceServers();
+  if(!ice.relay) return {ok:false,msg:ice.error||'No relay set up yet.'};
+  const pc=new RTCPeerConnection({iceServers:ice.servers,iceTransportPolicy:'relay'});
+  let ok=false;
+  pc.onicecandidate=e=>{ if(e.candidate && / typ relay /.test(e.candidate.candidate)) ok=true; };
+  pc.createDataChannel('test');
+  await pc.setLocalDescription(await pc.createOffer());
+  await new Promise(r=>{ const t=setTimeout(r,8000);
+    pc.onicegatheringstatechange=()=>{ if(pc.iceGatheringState==='complete'){ clearTimeout(t); r(); } }; });
+  pc.close();
+  return ok ? {ok:true,msg:'✓ Relay works — friends on other networks can connect.'}
+            : {ok:false,msg:'✗ The relay didn’t answer. Double-check the app name and key.'};
+}
+function showRelayStatus(){
+  const t=turnSettings();
+  $('#turnApp').value=store.get('euchre_turn_app')||''; $('#turnKey').value=store.get('euchre_turn_key')||'';
+  $('#turnStatus').textContent = turnEndpoint() ? 'Secure relay server is set up ✓' + (t?' (plus a key saved in this browser)':'')
+    : t ? (store.get('euchre_turn_app') ? 'Relay saved in this browser.' : 'Relay is built into this page ✓') : 'Not set up — direct connections only.';
+}
+$('#turnSave').onclick=async()=>{
+  const app=$('#turnApp').value.trim().toLowerCase(), key=$('#turnKey').value.trim();
+  if(app && !/^[a-z0-9_-]{1,63}$/.test(app)) return $('#turnStatus').textContent='Just the app name, not the full address (e.g. my-euchre from my-euchre.metered.live).';
+  store.set('euchre_turn_app',app); store.set('euchre_turn_key',key);
+  icePromise=null;                                           // pick up the new settings
+  if(!app && !key && !turnEndpoint()){ showRelayStatus(); return; }
+  $('#turnSave').disabled=true; $('#turnStatus').textContent='Testing…';
+  const r=await testRelay();
+  $('#turnSave').disabled=false; $('#turnStatus').textContent=r.msg;
+};
+
 /* ---- boot ---- */
+showRelayStatus();
+if(FORCE_RELAY) homeErr('Test mode: relay-only connections (?relay).');
 renderReactbar();
+// title screen: four aces fanned out, gently floating in 3D
+$('#hero').innerHTML=['S','H','D','C'].map((s,i)=>{
+  const off=i-1.5;
+  return cardEl({r:'A',s},'',`style="--rot:${off*13}deg;--y:${off*off*6}px;--delay:${-i*1.1}s"`);
+}).join('');
+// the home panel tilts slightly toward the mouse
+$('#home').addEventListener('pointermove',e=>{
+  const p=$('#home .panel'), r=p.getBoundingClientRect();
+  const x=(e.clientX-(r.left+r.width/2))/r.width, y=(e.clientY-(r.top+r.height/2))/r.height;
+  p.style.setProperty('--ty',(Math.max(-1,Math.min(1,x))*6)+'deg'); p.style.setProperty('--tx',(Math.max(-1,Math.min(1,-y))*6)+'deg');
+});
+$('#home').addEventListener('pointerleave',()=>{ const p=$('#home .panel'); p.style.setProperty('--tx','0deg'); p.style.setProperty('--ty','0deg'); });
 $('#nameIn').value=store.get('euchre_name')||'';
 const hashCode=(location.hash||'').replace('#','').toUpperCase();
 if(hashCode.length===4) $('#codeIn').value=hashCode;
