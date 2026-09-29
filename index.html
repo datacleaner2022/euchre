@@ -371,11 +371,11 @@ label.alone{display:flex;gap:6px;align-items:center;background:var(--panel);padd
 .seat:hover{transform:translateY(-3px)}
 
 /* chunky 3D push buttons (primary + secondary) */
-button:where(:not(.sec,.thopt,.ptab,.iconbtn)):where(:not(.reactbar button,#picker button)){
+button:where(:not(.sec,.thopt,.ptab,.iconbtn,.st-style,.sw,.avbtn)):where(:not(.reactbar button,#picker button)){
   background-image:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,0) 55%);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 3px 0 color-mix(in srgb,var(--gold) 50%,#000),0 6px 14px -3px rgba(0,0,0,.45);
   transition:transform .08s,box-shadow .08s}
-button:where(:not(.sec,.thopt,.ptab,.iconbtn)):where(:not(.reactbar button,#picker button)):active:not(:disabled){
+button:where(:not(.sec,.thopt,.ptab,.iconbtn,.st-style,.sw,.avbtn)):where(:not(.reactbar button,#picker button)):active:not(:disabled){
   transform:translateY(3px);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 0 0 color-mix(in srgb,var(--gold) 50%,#000),0 2px 5px rgba(0,0,0,.4)}
 button.sec{box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 2px 0 rgba(0,0,0,.25);transition:transform .08s}
 button.sec:active:not(:disabled){transform:translateY(2px)}
@@ -431,6 +431,55 @@ html:is([data-theme="cat"],[data-theme="light"]) .tm .pts{box-shadow:inset 0 2px
   .pod .pn{gap:3px}
 }
 @media (prefers-reduced-motion:reduce){ #hero .card{animation:none} #home .panel{transform:none} }
+
+/* ============================ AVATAR STUDIO ============================ */
+.studio-wrap{z-index:45;padding:12px}
+.studio{background:var(--modal);color:var(--ink);border:1px solid var(--line);border-radius:var(--r);width:min(780px,96vw);max-height:92vh;
+  display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.55);overflow:hidden;text-align:left}
+.st-head,.st-foot{display:flex;align-items:center;gap:10px;padding:12px 16px}
+.st-head{justify-content:space-between;border-bottom:1px solid var(--line);font-size:1.1rem;font-family:var(--display)}
+.st-foot{justify-content:flex-end;border-top:1px solid var(--line);flex-wrap:wrap}
+.st-credit{margin-right:auto;font-size:.75rem}
+.st-body{display:grid;grid-template-columns:250px 1fr;gap:18px;padding:16px;overflow:auto;min-height:0}
+.st-stage{perspective:700px;display:flex;justify-content:center;padding:8px 0 4px}
+.st-card{width:196px;padding:16px 14px 12px;border-radius:20px;text-align:center;transition:transform .15s ease-out;transform-style:preserve-3d;
+  background:linear-gradient(160deg,rgba(255,255,255,.2),rgba(255,255,255,.04));border:1px solid var(--line);
+  box-shadow:0 18px 40px -12px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.25)}
+.st-float{animation:stFloat 5s ease-in-out infinite}
+@keyframes stFloat{50%{translate:0 -7px}}
+.st-card img{width:160px;height:160px;border-radius:50%;display:block;margin:0 auto;background:rgba(255,255,255,.15);
+  box-shadow:0 0 0 4px var(--gold),0 12px 26px rgba(0,0,0,.45);transform:translateZ(34px)}
+.st-card img.pop{animation:stPop .35s ease}
+@keyframes stPop{40%{scale:1.08}}
+.st-name{margin-top:12px;font-weight:800;font-size:1.05rem;font-family:var(--display);transform:translateZ(22px)}
+.st-quick{justify-content:center;margin-top:12px}
+.st-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;opacity:.7;margin:0 0 6px}
+.st-styles{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px}
+.st-style{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;background:var(--btn2);color:var(--ink);
+  border-radius:var(--rb);font-size:.66rem;font-weight:600;border:2px solid transparent;transition:transform .12s}
+.st-style:hover{transform:translateY(-2px)}
+.st-style img{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.2)}
+.st-style.on{border-color:var(--gold)}
+.st-opts{display:flex;flex-direction:column;gap:6px}
+.st-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 8px;border-radius:var(--rb);background:var(--btn2)}
+.st-row>span{font-weight:600;font-size:.88rem}
+.st-cyc{display:flex;align-items:center;gap:6px}
+.st-cyc b{min-width:66px;text-align:center;font-size:.8rem;font-variant-numeric:tabular-nums}
+.st-cyc button{padding:.2em .6em}
+.st-colors{flex-wrap:wrap}
+.st-sw{display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end}
+.sw{width:22px;height:22px;border-radius:50%;padding:0;border:2px solid rgba(255,255,255,.55)}
+.sw.on{outline:3px solid var(--gold);outline-offset:1px}
+.sw.auto{background:var(--btn2);color:var(--ink);font-size:.6rem;font-weight:800;line-height:1}
+.avbtn{padding:0;background:none;border-radius:50%;flex:none;transition:transform .15s}
+.avbtn:hover{transform:scale(1.08) rotate(-4deg)}
+.avbtn .av{width:44px;height:44px;font-size:1.05rem}
+@media (max-width:640px){
+  .st-body{grid-template-columns:1fr}
+  .st-styles{grid-template-columns:repeat(3,1fr)}
+  .st-card{width:170px} .st-card img{width:130px;height:130px}
+}
+@media (prefers-reduced-motion:reduce){ .st-float{animation:none} }
 
 /* ============================ THEME PICKER ============================ */
 #themeMenu{position:fixed;z-index:50;width:260px;background:var(--modal);color:var(--ink);border:1px solid var(--line);
@@ -564,7 +613,7 @@ html[data-theme="mario"] button{border:3px solid #000;font-family:var(--display)
   box-shadow:inset -3px -3px 0 rgba(0,0,0,.3),inset 3px 3px 0 rgba(255,255,255,.45);text-shadow:none}
 html[data-theme="mario"] button.sec{color:#fff;text-shadow:1px 1px 0 #000}
 html[data-theme="mario"] #chat .reactbar button{border:0;box-shadow:none;font-size:1.2rem;font-family:var(--font)}
-html[data-theme="mario"] :is(#picker .ptab,.egrid button,.ggrid button,.sgrid button){border:0;box-shadow:none;font-family:var(--font);font-size:1.3rem;padding:0}
+html[data-theme="mario"] :is(#picker .ptab,.egrid button,.ggrid button,.sgrid button,.sw,.avbtn){border:0;box-shadow:none;font-family:var(--font);font-size:1.3rem;padding:0}
 html[data-theme="mario"] #picker .ptab{font-size:1.05rem;padding:.3em 0}
 html[data-theme="mario"] #picker .ptab[data-tab=gif]{font-size:.62rem;border:1.5px solid currentColor;padding:.2em 0}
 html[data-theme="mario"] #picker{text-shadow:none}
@@ -756,7 +805,8 @@ try{ document.documentElement.dataset.theme = localStorage.getItem('euchre_theme
   <h1>Euchre with Friends</h1>
   <div class="muted">4 players, 2 teams. Empty seats can be filled with bots.</div>
   <div class="panel">
-    <div class="row"><input id="nameIn" type="text" maxlength="16" placeholder="Your name" autocomplete="off"></div>
+    <div class="row"><button type="button" class="avbtn" id="homeAv" data-do="studio" title="Create your avatar" aria-label="Create your avatar"></button>
+      <input id="nameIn" type="text" maxlength="16" placeholder="Your name" autocomplete="off"></div>
     <div class="row"><button id="hostBtn" style="flex:1">Host a new game</button></div>
     <div class="muted" style="text-align:center;margin:6px 0">— or join a friend —</div>
     <div class="row">
@@ -764,7 +814,7 @@ try{ document.documentElement.dataset.theme = localStorage.getItem('euchre_theme
       <button id="joinBtn">Join</button>
     </div>
     <div id="homeErr" class="err"></div>
-    <div class="theme-home"><button class="sec" data-do="themes">🎨 Change theme</button></div>
+    <div class="theme-home row" style="justify-content:center"><button class="sec" data-do="studio">🧑‍🎨 Create your avatar</button><button class="sec" data-do="themes">🎨 Change theme</button></div>
     <details class="netcfg" id="netcfg">
       <summary>🔌 Playing from different networks?</summary>
       <p>If a friend on another network (a different house, or phone data) gets stuck connecting, one of your
@@ -785,8 +835,11 @@ try{ document.documentElement.dataset.theme = localStorage.getItem('euchre_theme
   </p>
   <p class="credits muted">
     Avatars by <a href="https://www.dicebear.com" target="_blank" rel="noopener">DiceBear</a>
-    (<a href="https://www.dicebear.com/styles/notionists/" target="_blank" rel="noopener">Notionists</a> by Zoish &amp;
-    <a href="https://www.dicebear.com/styles/voxel-bot/" target="_blank" rel="noopener">Voxel Bot</a>, CC0) ·
+    (<a href="https://www.dicebear.com/styles/notionists/" target="_blank" rel="noopener">Notionists</a> by Zoish,
+    <a href="https://www.dicebear.com/styles/lorelei/" target="_blank" rel="noopener">Lorelei</a> by Lisa Wischofsky,
+    <a href="https://www.dicebear.com/styles/open-peeps/" target="_blank" rel="noopener">Open Peeps</a> by Pablo Stanley,
+    Pixel Art, Thumbs &amp; <a href="https://www.dicebear.com/styles/voxel-bot/" target="_blank" rel="noopener">Voxel Bot</a>: CC0;
+    <a href="https://www.dicebear.com/styles/avataaars/" target="_blank" rel="noopener">Avataaars</a> by Pablo Stanley) ·
     GIFs by <a href="https://giphy.com" target="_blank" rel="noopener">GIPHY</a> ·
     Multiplayer by <a href="https://peerjs.com" target="_blank" rel="noopener">PeerJS</a> ·
     Fonts by <a href="https://fonts.google.com" target="_blank" rel="noopener">Google Fonts</a>
@@ -798,7 +851,7 @@ try{ document.documentElement.dataset.theme = localStorage.getItem('euchre_theme
   <h1>Lobby</h1>
   <div class="panel row" style="justify-content:space-between">
     <div><div class="muted">Room code</div><div class="code" id="lobbyCode"></div></div>
-    <div class="row"><button class="sec" data-do="themes">🎨 Theme</button><button id="copyBtn" class="sec">Copy invite link</button></div>
+    <div class="row"><button class="sec" data-do="studio">🧑‍🎨 Avatar</button><button class="sec" data-do="themes">🎨 Theme</button><button id="copyBtn" class="sec">Copy invite link</button></div>
   </div>
   <div class="seats" id="lobbySeats"></div>
   <div class="row" id="lobbyActions"></div>
@@ -1163,6 +1216,30 @@ const REACTIONS = ['👏','😂','😮','🔥','😭','😎','🤦','🎉'];    
 const EMOJI_RE = /^(?:\p{Extended_Pictographic}|\p{Emoji_Modifier}|\p{Regional_Indicator}|[\u200d\ufe0f\u20e3])+$/u;
 const isEmoji = e => typeof e==='string' && e.length<=16 && EMOJI_RE.test(e);
 const BIG_MODES = ['rain','giant'];
+// Custom avatars (made in the avatar studio). Only these DiceBear styles, and only simple option values,
+// are ever accepted — from anyone — and the image address is always rebuilt here from those values.
+const AV_STYLES = {'notionists':'Notionists','lorelei':'Lorelei','open-peeps':'Open Peeps','pixel-art':'Pixel Art','thumbs':'Thumbs','avataaars':'Avataaars'};
+const AV_DEFAULT_BG = 'b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf';
+function cleanAvatar(a){
+  if(!a || typeof a!=='object' || !Object.prototype.hasOwnProperty.call(AV_STYLES,a.style)) return null;
+  const o={}; let n=0;
+  for(const [k,v] of Object.entries(a.o && typeof a.o==='object' ? a.o : {})){
+    if(++n>40) break;
+    if(!/^[a-zA-Z]{2,40}$/.test(k)) continue;
+    if(/Probability$/.test(k)){ if(v===0||v===100) o[k]=v; }
+    else if(/Color$/.test(k)){ if(typeof v==='string' && /^[0-9a-f]{6}$/i.test(v)) o[k]=v.toLowerCase(); }
+    else if(/Variant$/.test(k)){ if(typeof v==='string' && /^[a-zA-Z0-9]{1,32}$/.test(v)) o[k]=v; }
+  }
+  const seed = typeof a.seed==='string' && /^[\w-]{1,32}$/.test(a.seed) ? a.seed : 'euchre';
+  return {style:a.style,seed,o};
+}
+function customAvatarUrl(a){
+  const q=new URLSearchParams({seed:a.seed});
+  for(const [k,v] of Object.entries(a.o)) q.set(k,v);
+  if(!a.o.backgroundColor) q.set('backgroundColor',AV_DEFAULT_BG);
+  // DiceBear wants list values separated by plain commas (values are already validated, so this is safe)
+  return `https://api.dicebear.com/10.x/${a.style}/svg?${q.toString().replace(/%2C/g,',')}`;
+}
 // GIFs may only come from these image hosts (https), so a pasted link can't point anywhere odd.
 const GIF_HOSTS = /^(media\d*\.giphy\.com|i\.giphy\.com|media\d*\.tenor\.com|c\.tenor\.com|i\.imgur\.com)$/i;
 function cleanGifUrl(u){
@@ -1271,10 +1348,11 @@ class Room {
     this.botSay(named!==undefined?named:pick(bots),key,true);
   }
   seatOf(token){ return this.seats.findIndex(s=>s && !s.bot && s.token===token); }
-  join(token,name){
+  join(token,name,avatar){
     name=(typeof name==='string' && name.trim() ? name.trim() : 'Player').slice(0,16);
+    avatar=cleanAvatar(avatar);
     const m=this.members.get(token);
-    if(m){ m.online=true; m.name=name; } else this.members.set(token,{name,online:true});
+    if(m){ m.online=true; m.name=name; m.avatar=avatar; } else this.members.set(token,{name,online:true,avatar});
     const i=this.seatOf(token); if(i>=0) this.seats[i].name=name;
     const held=this.seats.findIndex(s=>s && s.bot && s.wasHuman && s.token===token);
     if(held>=0){ const s=this.seats[held]; s.bot=false; s.wasHuman=false; s.name=name; if(this.game) this.game.poke(); }
@@ -1364,6 +1442,11 @@ class Room {
         this.chat.push({name:this.members.get(token).name,gif:url}); if(this.chat.length>60) this.chat.shift();
         break;                                           // GIFs live in the chat only
       }
+      case 'avatar': {                                   // someone saved a new look in the avatar studio
+        if(this.spam(token,'avatar',1500)) return;
+        this.members.get(token).avatar=cleanAvatar(msg.avatar);
+        break;
+      }
       case 'botchat':
         if(!isHost) return;
         this.botChat=!!msg.on; if(!this.botChat) this.clearBotChat();
@@ -1377,8 +1460,12 @@ class Room {
     const watchers=[...this.members.entries()].filter(([t,m])=>m.online && this.seatOf(t)<0).map(([t,m])=>m.name);
     return {
       code:this.code, isHost:token===this.host, me,
-      seats:this.seats.map(s=>s?{name:s.name,bot:!!s.bot,wasHuman:!!s.wasHuman,
-        online:s.bot?true:!!(this.members.get(s.token)&&this.members.get(s.token).online)}:null),
+      seats:this.seats.map(s=>{
+        if(!s) return null;
+        const m=s.token && this.members.get(s.token);
+        return {name:s.name,bot:!!s.bot,wasHuman:!!s.wasHuman,online:s.bot?true:!!(m&&m.online),
+                avatar:(!s.bot||s.wasHuman) && m ? m.avatar||null : null};
+      }),
       watchers, chat:this.chat.slice(-30), botChat:this.botChat,
       reacts:this.reacts.filter(r=>Date.now()-r.ts<4000),
       gifKey:store.get('euchre_giphy_key')||'',        // host's GIPHY key, so the whole room can search
@@ -1444,8 +1531,8 @@ const CONNECT_TIMEOUT=15000;
 
 const turnEndpoint = () => { const u=store.get('euchre_turn_endpoint')||TURN_ENDPOINT; return /^https:\/\/[^\s"'<>]+$/.test(u)?u:''; };
 function turnSettings(){                          // manual fallback: saved in this browser only
-  const app=String(store.get('euchre_turn_app')||'bert-euchre').trim().toLowerCase();                 // built in (public)
-  const key=String(store.get('euchre_turn_key')||'32defd9b8323f23a78f061dc7e5c85fca057').trim();  // built in (public)
+  const app=String(store.get('euchre_turn_app')||'').trim().toLowerCase();
+  const key=String(store.get('euchre_turn_key')||'').trim();
   return /^[a-z0-9_-]{1,63}$/.test(app) && /^[\w-]{8,128}$/.test(key) ? {app,key} : null;
 }
 async function fetchJson(url,ms=6000){
@@ -1508,7 +1595,7 @@ async function startHost(attempt=0){
   p.on('open',()=>{
     peer=p; role='host';
     room=new Room(code,myToken,deliver);
-    room.join(myToken,myName());
+    room.join(myToken,myName(),myAvatar());
     store.sset('euchre_room',null);
     $('#hostBtn').disabled=false; homeErr('');
   });
@@ -1526,7 +1613,7 @@ async function startHost(attempt=0){
         if(typeof m.token!=='string' || m.token.length>64) return;
         const old=guestConns.get(m.token); if(old && old!==c){ try{old.close();}catch(e){} }
         c.token=m.token; guestConns.set(m.token,c);
-        room.join(m.token,m.name);
+        room.join(m.token,m.name,m.avatar);
       } else if(c.token) room.handle(c.token,m);
     });
     c.on('close',()=>{ if(c.token && guestConns.get(c.token)===c){ guestConns.delete(c.token); room.leave(c.token); } });
@@ -1565,7 +1652,7 @@ async function joinGame(code,auto){
     c.on('open',async()=>{
       clearTimeout(failTimer);
       store.sset('euchre_room',code);
-      c.send({t:'join',token:myToken,name:myName()});
+      c.send({t:'join',token:myToken,name:myName(),avatar:myAvatar()});
       connRoute=await connectionRoute(c);
       if(!auto && connRoute) toast(connRoute==='relay'?'Connected through the relay ✓':'Connected directly ✓');
       if(S) render();
@@ -1905,13 +1992,23 @@ function nameSeed(name){
   return h.toString(36);
 }
 function avatarUrl(s){
-  return s.bot && !s.wasHuman
-    ? `https://api.dicebear.com/10.x/voxel-bot/svg?seed=${nameSeed(s.name)}`
-    : `https://api.dicebear.com/10.x/notionists/svg?seed=${nameSeed(s.name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+  if(s.bot && !s.wasHuman) return `https://api.dicebear.com/10.x/voxel-bot/svg?seed=${nameSeed(s.name)}`;
+  const custom=cleanAvatar(s.avatar);                     // made in the avatar studio (re-checked here too)
+  return customAvatarUrl(custom || {style:'notionists',seed:nameSeed(s.name),o:{}});
 }
 function avatar(seat,s,cls=''){
   const initial=esc((String(s.name||'?').trim()[0]||'?').toUpperCase());
-  return `<span class="av t${seat%2} ${cls}">${initial}<img src="${avatarUrl(s)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()"></span>`;
+  return `<span class="av t${seat%2} ${cls}">${initial}<img src="${esc(avatarUrl(s))}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="imgRetry(this)"></span>`;
+}
+// Your own avatar: the one you saved in the studio, or null (then your name picks one).
+function myAvatar(){ try{ return cleanAvatar(JSON.parse(store.get('euchre_avatar')||'null')); }catch(e){ return null; } }
+// Avatar pictures: if one fails to load (a network hiccup, or the avatar service is busy), try once more,
+// then fall back to the player's initial underneath.
+function imgRetry(img){
+  if(img.dataset.retried){ img.remove(); return; }
+  img.dataset.retried='1';
+  const u=img.getAttribute('src');
+  setTimeout(()=>{ if(img.isConnected){ img.removeAttribute('src'); img.setAttribute('src',u); } },1000+Math.random()*1500);
 }
 // Only replace an element's HTML when it changed (avoids avatar flicker on every update).
 function setHtml(el,html){ if(el._html!==html){ el.innerHTML=html; el._html=html; } }
@@ -2076,6 +2173,16 @@ document.addEventListener('click',e=>{
     case 'ptab': pickerTab = isNaN(+d.tab) ? d.tab : +d.tab; renderPickerTab(); break;
     case 'sendgif': send({t:'gif',url:d.url}); closePicker(); break;
     case 'themes': openThemeMenu(b); break;
+    case 'studio': openStudio(); break;
+    case 'studioClose': closeStudio(); break;
+    case 'studioSave': saveStudio(); break;
+    case 'studioStyle': if(studio && d.style!==studio.draft.style && AV_STYLES[d.style]){
+        const bg=studio.draft.o.backgroundColor; studio.draft={style:d.style,seed:studio.draft.seed,o:bg?{backgroundColor:bg}:{}};
+        setPreview(); renderStudio(true); } break;
+    case 'studioCycle': if(studio) studioCycle(d.k,+d.dir); break;
+    case 'studioColor': if(studio){ if(d.c) studio.draft.o[d.k]=d.c; else delete studio.draft.o[d.k]; setPreview(); renderStudioOpts(); } break;
+    case 'studioRandom': if(studio){ studio.draft.seed=Math.random().toString(36).slice(2,10); studio.draft.o={}; setPreview(); renderStudio(false); } break;
+    case 'studioReset': if(studio){ studio.draft=JSON.parse(JSON.stringify(studioStart())); setPreview(); renderStudio(true); } break;
     case 'theme': applyTheme(d.id); closeThemeMenu(); break;
     case 'mute': Sound.muted=!Sound.muted; store.set('euchre_mute',Sound.muted?'1':'0'); if(!Sound.muted){ Sound.init(); Sound.play('pop'); } render(); break;
     case 'pass': send({t:'act',a:{type:'pass'}}); goAlone=false; break;
@@ -2265,6 +2372,126 @@ async function loadGifs(){
 document.addEventListener('click',e=>{ if(!e.target.closest('#picker,[data-do=picker]')) closePicker(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closePicker(); });
 
+/* ---- avatar studio ----
+   Reads each style's real options from DiceBear (options.json), so every hair, eye, hat… it offers is here.
+   The finished avatar is saved in this browser and sent to the host when you join. */
+const PALETTES={
+  skin:['ffdbb4','f9c9a3','edb98a','d08b5b','ae5d29','8d5524','614335','3b2219'],
+  hair:['2c1b18','4a312c','724133','a55728','b58143','d6b370','ecdcbf','e8e1e1','c93305','f59797','6a4c93','2e86de'],
+  bg:['b6e3f4','c0aede','d1d4f9','ffd5dc','ffdfbf','c1f0c1','fdf3b0','f4f4f4','2d3436'],
+  any:['262e33','25557c','5199e4','65c9ff','3c4f5c','929598','e6e6e6','ffffff','ff488e','ff5c5c','ffafb9','a7ffc4','ffffb1','f7b733']
+};
+const paletteFor = k => k==='skinColor' ? PALETTES.skin : /^(hair|facialHair|beard|eyebrows)Color$/.test(k) ? PALETTES.hair
+                      : k==='backgroundColor' ? PALETTES.bg : PALETTES.any;
+const niceLabel = k => k.replace(/(Variant|Color)$/,'').replace(/([A-Z])/g,' $1').replace(/^./,c=>c.toUpperCase()).trim();
+const avOptionsCache={};
+function styleOptions(style){
+  if(!avOptionsCache[style]) avOptionsCache[style]=fetch(`https://api.dicebear.com/10.x/${style}/options.json`)
+    .then(r=>r.ok?r.json():Promise.reject(new Error('HTTP '+r.status))).catch(e=>{ delete avOptionsCache[style]; throw e; });
+  return avOptionsCache[style];
+}
+let studio=null;                                 // {draft:{style,seed,o}, opts} while the studio is open
+const studioStart = () => myAvatar() || {style:'notionists',seed:nameSeed(myName()),o:{}};
+
+function renderHomeAvatar(){
+  setHtml($('#homeAv'), avatar(0,{name:myName(),avatar:myAvatar()}));
+}
+function openStudio(){
+  closeStudio();
+  studio={draft:JSON.parse(JSON.stringify(studioStart())),opts:null};
+  const el=document.createElement('div'); el.id='studio'; el.className='overlay studio-wrap';
+  el.innerHTML=`<div class="studio" role="dialog" aria-modal="true" aria-label="Avatar studio">
+    <div class="st-head"><span>🧑‍🎨 Avatar studio</span><button type="button" class="sec iconbtn" data-do="studioClose" aria-label="Close">✕</button></div>
+    <div class="st-body">
+      <div class="st-left">
+        <div class="st-stage"><div class="st-float"><div class="st-card" id="stCard">
+          <img id="stImg" alt="Your avatar" referrerpolicy="no-referrer"><div class="st-name" id="stName"></div></div></div></div>
+        <div class="row st-quick"><button type="button" class="sec" data-do="studioRandom">🎲 Surprise me</button>
+          <button type="button" class="sec" data-do="studioReset">↺ Reset</button></div>
+      </div>
+      <div class="st-right">
+        <div class="st-label">Style</div><div class="st-styles" id="stStyles"></div>
+        <div class="st-label">Make it yours</div><div class="st-opts" id="stOpts"></div>
+      </div>
+    </div>
+    <div class="st-foot"><span class="muted st-credit" id="stCredit"></span>
+      <button type="button" class="sec" data-do="studioClose">Cancel</button><button type="button" data-do="studioSave">Save avatar</button></div>
+  </div>`;
+  document.body.appendChild(el);
+  const stage=el.querySelector('.st-stage');                 // the preview card tilts toward the mouse
+  stage.addEventListener('pointermove',e=>{
+    const r=stage.getBoundingClientRect(), x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
+    $('#stCard').style.transform=`rotateY(${x*26}deg) rotateX(${-y*26}deg)`;
+  });
+  stage.addEventListener('pointerleave',()=>{ $('#stCard').style.transform=''; });
+  el.addEventListener('click',e=>{ if(e.target===el) closeStudio(); });
+  $('#stImg').src=customAvatarUrl(cleanAvatar(studio.draft));
+  renderStudio(true);
+}
+function closeStudio(){ const s=$('#studio'); if(s) s.remove(); studio=null; }
+function setPreview(){
+  const url=customAvatarUrl(cleanAvatar(studio.draft)), pre=new Image();
+  pre.referrerPolicy='no-referrer';
+  pre.onload=()=>{ const img=$('#stImg'); if(!img) return; img.src=url; img.classList.remove('pop'); void img.offsetWidth; img.classList.add('pop'); };
+  pre.src=url;                                               // swap only once loaded, so it never flickers
+}
+async function renderStudio(styleChanged){
+  if(!studio) return;
+  const d=studio.draft;
+  $('#stName').textContent=myName();
+  setHtml($('#stStyles'),Object.entries(AV_STYLES).map(([id,label])=>
+    `<button type="button" class="st-style ${id===d.style?'on':''}" data-do="studioStyle" data-style="${id}" aria-pressed="${id===d.style}">
+       <img src="${esc(customAvatarUrl({style:id,seed:d.seed,o:{}}))}" alt="" referrerpolicy="no-referrer" onerror="imgRetry(this)"><span>${label}</span></button>`).join(''));
+  $('#stCredit').textContent = d.style==='avataaars' ? 'Avataaars by Pablo Stanley, via DiceBear' : `${AV_STYLES[d.style]} via DiceBear (CC0)`;
+  if(styleChanged){
+    studio.opts=null; $('#stOpts').innerHTML='<div class="muted">Loading options…</div>';
+    try{ const o=await styleOptions(d.style); if(!studio || studio.draft.style!==d.style) return; studio.opts=o; }
+    catch(e){ if(studio) $('#stOpts').innerHTML="<div class=\"muted\">Couldn't load this style's options. Check your connection, or try 🎲.</div>"; return; }
+  }
+  renderStudioOpts();
+}
+function renderStudioOpts(){
+  const o=studio && studio.opts, d=studio && studio.draft.o; if(!o) return;
+  const rows=[];
+  for(const [k,def] of Object.entries(o)){                    // every feature with choices: ◀ n / total ▶
+    if(!/Variant$/.test(k) || def.type!=='enum' || !Array.isArray(def.values)) continue;
+    const probKey=k.replace(/Variant$/,'Probability'), canHide=!!o[probKey];
+    if(def.values.length<2 && !canHide) continue;
+    const pos = d[probKey]===0 ? 'None' : d[k] ? `${def.values.indexOf(d[k])+1} / ${def.values.length}` : 'Auto';
+    rows.push(`<div class="st-row"><span>${esc(niceLabel(k))}</span><div class="st-cyc">
+      <button type="button" class="sec" data-do="studioCycle" data-k="${k}" data-dir="-1" aria-label="Previous ${esc(niceLabel(k))}">◀</button>
+      <b>${pos}</b>
+      <button type="button" class="sec" data-do="studioCycle" data-k="${k}" data-dir="1" aria-label="Next ${esc(niceLabel(k))}">▶</button></div></div>`);
+  }
+  const colors=Object.keys(o).filter(k=>/Color$/.test(k) && o[k].type==='color').sort((a,b)=>(a==='backgroundColor')-(b==='backgroundColor'));
+  for(const k of colors){                                      // colour swatches; "A" = let the style choose
+    rows.push(`<div class="st-row st-colors"><span>${esc(niceLabel(k))}</span><div class="st-sw">
+      <button type="button" class="sw auto ${!d[k]?'on':''}" data-do="studioColor" data-k="${k}" data-c="" title="Automatic">A</button>
+      ${paletteFor(k).map(c=>`<button type="button" class="sw ${d[k]===c?'on':''}" data-do="studioColor" data-k="${k}" data-c="${c}" style="background:#${c}" title="#${c}" aria-label="${esc(niceLabel(k))} #${c}"></button>`).join('')}
+    </div></div>`);
+  }
+  $('#stOpts').innerHTML=rows.join('') || '<div class="muted">This style has no extra options. Try 🎲 Surprise me.</div>';
+}
+function studioCycle(k,dir){                                   // Auto → each variant → None (if it can be hidden) → Auto
+  const def=studio.opts && studio.opts[k]; if(!def) return;
+  const probKey=k.replace(/Variant$/,'Probability'), canHide=!!studio.opts[probKey], d=studio.draft.o;
+  const seq=['__auto',...def.values,...(canHide?['__none']:[])];
+  let i=seq.indexOf(d[probKey]===0 ? '__none' : d[k]||'__auto'); if(i<0) i=0;
+  const pick=seq[(i+dir+seq.length)%seq.length];
+  delete d[k]; delete d[probKey];
+  if(pick==='__none') d[probKey]=0;
+  else if(pick!=='__auto'){ d[k]=pick; if(canHide) d[probKey]=100; }
+  setPreview(); renderStudioOpts();
+}
+function saveStudio(){
+  const a=cleanAvatar(studio.draft); if(!a) return;
+  store.set('euchre_avatar',JSON.stringify(a));
+  if(S) send({t:'avatar',avatar:a});                           // update everyone at the table
+  closeStudio(); renderHomeAvatar(); toast('Avatar saved ✓');
+}
+$('#nameIn').addEventListener('input',renderHomeAvatar);
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeStudio(); });
+
 /* ---- relay (TURN) setup panel ---- */
 // Ask the relay for a server address: if it hands back a "relay" candidate, friends on blocked networks can connect.
 async function testRelay(){
@@ -2285,7 +2512,7 @@ function showRelayStatus(){
   const t=turnSettings();
   $('#turnApp').value=store.get('euchre_turn_app')||''; $('#turnKey').value=store.get('euchre_turn_key')||'';
   $('#turnStatus').textContent = turnEndpoint() ? 'Secure relay server is set up ✓' + (t?' (plus a key saved in this browser)':'')
-    : t ? (store.get('euchre_turn_app') ? 'Relay saved in this browser.' : 'Relay is built into this page ✓') : 'Not set up — direct connections only.';
+    : t ? 'Relay saved in this browser.' : 'Not set up — direct connections only.';
 }
 $('#turnSave').onclick=async()=>{
   const app=$('#turnApp').value.trim().toLowerCase(), key=$('#turnKey').value.trim();
@@ -2315,6 +2542,7 @@ $('#home').addEventListener('pointermove',e=>{
 });
 $('#home').addEventListener('pointerleave',()=>{ const p=$('#home .panel'); p.style.setProperty('--tx','0deg'); p.style.setProperty('--ty','0deg'); });
 $('#nameIn').value=store.get('euchre_name')||'';
+renderHomeAvatar();
 const hashCode=(location.hash||'').replace('#','').toUpperCase();
 if(hashCode.length===4) $('#codeIn').value=hashCode;
 const savedRoom=store.sget('euchre_room');
