@@ -118,6 +118,9 @@ h1{margin:.2em 0;font-size:2rem;font-family:var(--display)}
 .overlay .panel .rm-list{width:min(480px,80vw)}
 button.picked{outline:2px solid var(--gold)}
 .rm-note{margin-top:8px;font-size:.85rem}
+.ver-warn{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:60;background:#ff9f43;color:#1a1a1a;font-weight:600;
+  padding:8px 12px;border-radius:var(--rb);box-shadow:0 8px 24px rgba(0,0,0,.4);display:flex;gap:10px;align-items:center;max-width:94vw}
+.ver-warn button{padding:.3em .8em}
 .viewer-tag{font-weight:500;opacity:.65;font-size:.85em}
 .team-tag{display:inline-block;font-size:.7em;font-weight:700;color:#fff;padding:0 6px;border-radius:99px;vertical-align:.1em;text-shadow:none}
 .team-tag.t0{background:var(--t0)} .team-tag.t1{background:var(--t1)}
@@ -566,7 +569,7 @@ html:is([data-theme="light"],[data-theme="cat"]){--suit-C:#15803d;--suit-H:#dc26
   #felt{height:clamp(240px,30vh,420px)}
 }
 
-/* ============================ LEADERBOARD ============================ */
+/* ============================ SCOREBOARD ============================ */
 .studio.lb{width:min(820px,96vw)}
 .lb-body{padding:16px;overflow:auto}
 .lb-ranks{display:flex;flex-direction:column;gap:6px}
@@ -1034,6 +1037,7 @@ try{ document.documentElement.dataset.theme = localStorage.getItem('euchre_theme
    EUCHRE RULES / GAME ENGINE  (runs in the host's browser)
    ===================================================================== */
 const FAST = /[?&]fast\b/.test(location.search);       // test mode: quick bots
+const APP_VERSION = '0.2';                          // shown on the home screen; players on a different copy are told to refresh
 const SYM = {S:'♠',H:'♥',D:'♦',C:'♣'};
 const SUIT_NAME = {S:'spades',H:'hearts',D:'diamonds',C:'clubs'};
 const SUIT_ORDER = ['S','H','C','D'];
@@ -1449,7 +1453,7 @@ class Room {
     this.botChat=true; this.lastBotChat=0; this.botChatTimers=[];
     this.reacts=[]; this.reactSeq=0; this.lastReact=new Map();
     this.turnLimit=60;                               // seconds per move for humans; the host can change it
-    this.results=[];                                 // finished games, for the leaderboard
+    this.results=[];                                 // finished games, for the scoreboard
     this.rematch=new Map();                          // end-of-game votes: token -> 'again' | 'lobby'
     this.graceTimers=new Map(); this.graceUntil=new Map();   // disconnected players: time left before a bot fills in
   }
@@ -1579,7 +1583,7 @@ class Room {
     } else this.sys(`${m.name} disconnected`);
     this.broadcast();
   }
-  // Leaderboard: every finished game in this room (kept until the room closes)
+  // Scoreboard: every finished game in this room (kept until the room closes)
   recordResult(team){
     const g=this.game, names=[0,1,2,3].map(i=>this.seats[i]?this.seats[i].name:'?');
     this.results.push({n:this.results.length+1,at:Date.now(),teams:[[names[0],names[2]],[names[1],names[3]]],
@@ -1751,7 +1755,7 @@ class Room {
                 graceLeft:until ? Math.max(0,until-Date.now()) : 0,
                 avatar:(!s.bot||s.wasHuman) && m ? m.avatar||null : null};
       }),
-      watchers, chat:this.chat.slice(-30), botChat:this.botChat, turnLimit:this.turnLimit, results:this.results,
+      watchers, chat:this.chat.slice(-30), botChat:this.botChat, turnLimit:this.turnLimit, results:this.results, version:APP_VERSION,
       // all four seats for the game-over screen: people show their pick; bots and autoplay seats are always ready
       rematch:this.seats.map((s,i)=>{ if(!s) return null; const m=s.token&&this.members.get(s.token);
         const votes=!!(s.token && !s.bot && m && m.online);
@@ -2027,6 +2031,12 @@ async function joinGame(code,auto){
 function onMessage(m){
   if(m.t==='state'){
     S=m.view; S._at=Date.now();                       // countdowns in the view are measured from this moment
+    // everyone should run the same version as the host (an old cached copy shows old screens)
+    if(S.version!==APP_VERSION && !$('#verWarn')){
+      const w=document.createElement('div'); w.id='verWarn'; w.className='ver-warn';
+      w.innerHTML=`The host is on version ${esc(S.version||'older')}, you're on ${APP_VERSION}. Refresh to get the same version. <button type="button" onclick="location.reload()">Refresh</button>`;
+      document.body.appendChild(w);
+    }
     $('#joinBtn').disabled=false; homeErr('');
     history.replaceState(null,'','#'+S.code);
     render();
