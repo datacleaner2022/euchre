@@ -86,7 +86,7 @@ h1{margin:.2em 0;font-size:2rem;font-family:var(--display)}
 .backs .card.mini{width:30px;height:42px;margin-left:-8px;border-radius:4px}
 .backs .card.mini:first-child{margin-left:0}
 .card.mini .cs{display:none}
-.card.mini .cr{font-size:12px;top:3px;left:4px}
+.card.mini .cr{font-size:11px;top:3px;left:3px}
 .speed{display:inline-flex;gap:4px;align-items:center;font-size:.75rem;margin-top:6px;opacity:.9}
 .speed button{padding:.1em .5em;font-size:.75rem}
 #bottom{display:flex;flex-direction:column;align-items:center;gap:8px}
@@ -106,6 +106,7 @@ h1{margin:.2em 0;font-size:2rem;font-family:var(--display)}
 .dots i.won{background:var(--dot-won);opacity:1;box-shadow:0 0 6px var(--dot-won)}
 .mid{text-align:center;font-size:.85rem}
 .mid .trump{font-weight:700;margin-bottom:5px}
+.trumpsym{font-size:1.7em;line-height:.8;vertical-align:-.14em;text-shadow:0 1px 2px rgba(0,0,0,.35)}
 .order{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
 .chip{display:flex;align-items:center;gap:5px;padding:2px 8px 2px 2px;border-radius:99px;background:rgba(0,0,0,.3);font-size:.8rem;max-width:130px}
 .chip span.n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -130,21 +131,23 @@ h1{margin:.2em 0;font-size:2rem;font-family:var(--display)}
   user-select:none;flex:none}
 .card.red{color:var(--red)}
 /* corner indices: top-left, and the same rotated in the bottom-right like a real card */
-.card .cr{position:absolute;top:4px;left:5px;font-weight:800;font-size:calc(var(--card-w)*.22);line-height:1;text-align:center;letter-spacing:-.06em}
-.card .cr.br{top:auto;left:auto;right:5px;bottom:4px;transform:rotate(180deg)}
+.card .cr{position:absolute;top:4px;left:4px;font-weight:800;font-size:calc(var(--card-w)*.22);line-height:1;text-align:center;letter-spacing:-.06em;
+  display:flex;flex-direction:column;align-items:center}
+.card .cr .st{font-size:1.45em;line-height:.95;letter-spacing:0;margin-top:1px}   /* the suit: bigger than the rank */
+.card .cr.br{top:auto;left:auto;right:4px;bottom:4px;transform:rotate(180deg)}
 .card .cs{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:calc(var(--card-w)*.6);opacity:.9}
 /* 9 and 10 show real pip layouts; J/Q/K get a framed court figure; the Ace gets one big suit */
 .card:is([data-r="9"],[data-r="10"],[data-r="J"],[data-r="Q"],[data-r="K"]) .cs{display:none}
 .card[data-r="A"] .cs{font-size:calc(var(--card-w)*.74);opacity:1;filter:drop-shadow(0 1px 0 rgba(255,255,255,.5)) drop-shadow(0 2px 2px rgba(0,0,0,.25))}
 .card .pips{position:absolute;inset:0;pointer-events:none}
-.card .pips i{position:absolute;transform:translate(-50%,-50%);font-style:normal;font-size:calc(var(--card-w)*.19);line-height:1}
+.card .pips i{position:absolute;transform:translate(-50%,-50%);font-style:normal;font-size:calc(var(--card-w)*.23);line-height:1}
 .card .pips i.up{transform:translate(-50%,-50%) rotate(180deg)}
-.card .court{position:absolute;inset:19% 27%;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:4px;
+.card .court{position:absolute;inset:20% 31%;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:4px;
   border:1.5px solid color-mix(in srgb,currentColor 50%,transparent);
   background:linear-gradient(160deg,color-mix(in srgb,currentColor 18%,transparent),color-mix(in srgb,currentColor 5%,transparent));
   box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--card-face) 70%,transparent)}
-.card .court b{font-size:calc(var(--card-w)*.4);line-height:1;font-weight:400;font-family:'Segoe UI Symbol','DejaVu Sans','Noto Sans Symbols 2',serif}
-.card .court i{font-style:normal;font-size:calc(var(--card-w)*.16);line-height:1.1}
+.card .court b{font-size:calc(var(--card-w)*.36);line-height:1;font-weight:400;font-family:'Segoe UI Symbol','DejaVu Sans','Noto Sans Symbols 2',serif}
+.card .court i{font-style:normal;font-size:calc(var(--card-w)*.24);line-height:1}
 .card.mini :is(.pips,.court,.cr.br){display:none}
 .card.back{background:var(--card-back);border:var(--card-back-edge)}
 .card.dim{filter:brightness(.6)}
@@ -324,7 +327,7 @@ label.alone{display:flex;gap:6px;align-items:center;background:var(--panel);padd
   .pod{min-width:0;max-width:100%}
   .backs .card{width:18px;height:26px;margin-left:-12px}
   .backs .card.mini{width:22px;height:30px;margin-left:-11px}
-  .card.mini .cr{font-size:9px;top:2px;left:2px}
+  .card.mini .cr{font-size:8px;top:2px;left:2px}
   .backs{min-height:26px}
   .upcard .card{--card-w:64px;--card-h:90px}
   #hand .card{margin-left:-14px}
@@ -431,6 +434,28 @@ html:is([data-theme="cat"],[data-theme="light"]) .tm .pts{box-shadow:inset 0 2px
   .pod .pn{gap:3px}
 }
 @media (prefers-reduced-motion:reduce){ #hero .card{animation:none} #home .panel{transform:none} }
+
+/* ============================ DISCONNECTS, AUTOPLAY, TURN TIMER ============================ */
+.pod.dimmed .avwrap,.me-pod.dimmed .avwrap{filter:grayscale(.85) opacity(.75)}
+.badge.warn{background:#ff9f43;color:#1a1a1a}
+.pod-btn{margin-top:6px;padding:.2em .6em;font-size:.75rem}
+.mini-btn{padding:.15em .6em;font-size:.72rem;margin-left:6px}
+.tbar{height:5px;border-radius:99px;background:rgba(0,0,0,.35);overflow:hidden;margin-top:6px}
+.tbar i{display:block;height:100%;transform-origin:left;animation-name:tdrain;animation-timing-function:linear;animation-fill-mode:forwards}
+@keyframes tdrain{0%{transform:scaleX(1);background:var(--gold)}75%{background:var(--gold)}100%{transform:scaleX(0);background:#ff5c5c}}
+.tleft{display:inline-block;margin-left:8px;padding:0 8px;border-radius:99px;background:rgba(0,0,0,.3);font-variant-numeric:tabular-nums;font-size:.9em}
+.tleft.hurry{background:#ff5c5c;color:#fff;animation:pulse 1s ease-in-out infinite}
+[data-until].hurry:not(.tleft){color:#ff5c5c}
+select{font:inherit;padding:.2em .4em;border-radius:var(--rb);border:1px solid var(--line);background:var(--input);color:var(--ink)}
+select option{color:#111}
+/* suit symbols in the history + chat */
+:root{--suit-C:#4ade80;--suit-H:#ff7b7b;--suit-D:#5eb1ff}
+html:is([data-theme="light"],[data-theme="cat"]){--suit-C:#15803d;--suit-H:#dc2626;--suit-D:#1d4ed8}
+.suit{font-size:1.4em;line-height:.8;vertical-align:-.12em;font-weight:700}
+.suit.sS{color:var(--ink)} .suit.sC{color:var(--suit-C)} .suit.sH{color:var(--suit-H)} .suit.sD{color:var(--suit-D)}
+#notice .panel{max-width:min(420px,92vw)}
+#notice p{margin:0 0 16px;line-height:1.5}
+@media (prefers-reduced-motion:reduce){ .tbar i{animation:none} .tleft.hurry{animation:none} }
 
 /* ============================ AVATAR STUDIO ============================ */
 .studio-wrap{z-index:45;padding:12px}
@@ -677,7 +702,7 @@ html[data-theme="cat"] .card[data-r="J"] .cs::before{content:'😼'}
 html[data-theme="cat"] .card[data-r="Q"] .cs::before{content:'😻'}
 html[data-theme="cat"] .card[data-r="K"] .cs::before{content:'🦁'}
 html[data-theme="cat"] .card[data-r="A"] .cs::before{content:'🐈'}
-html[data-theme="cat"] .card .cs::after{content:attr(data-s);position:absolute;right:5px;bottom:3px;font-size:calc(var(--card-w)*.22)}
+html[data-theme="cat"] .card .cs::after{content:attr(data-s);position:absolute;right:5px;bottom:3px;font-size:calc(var(--card-w)*.3)}
 html[data-theme="cat"] .card.back::after{content:'🐱';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;filter:drop-shadow(0 1px 1px #fff)}
 html[data-theme="cat"] .backs .card.back{border-radius:6px}
 html[data-theme="cat"] .dots i.won{box-shadow:0 0 6px #ff6fa8}
@@ -780,7 +805,7 @@ html[data-theme="space"] .card[data-r="J"] .cs::before{content:'👨‍🚀'}
 html[data-theme="space"] .card[data-r="Q"] .cs::before{content:'👩‍🚀'}
 html[data-theme="space"] .card[data-r="K"] .cs::before{content:'👽'}
 html[data-theme="space"] .card[data-r="A"] .cs::before{content:'🚀'}
-html[data-theme="space"] .card .cs::after{content:attr(data-s);position:absolute;right:5px;bottom:3px;font-size:calc(var(--card-w)*.22)}
+html[data-theme="space"] .card .cs::after{content:attr(data-s);position:absolute;right:5px;bottom:3px;font-size:calc(var(--card-w)*.3)}
 html[data-theme="space"] .card.back::after{content:'🚀';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px}
 @media (prefers-reduced-motion:reduce){
   html[data-theme="space"] body::before,html[data-theme="space"] :is(#seat-top,#seat-left,#seat-right){animation:none}
@@ -951,12 +976,16 @@ class Game {
     this.emit=o.emit; this.name=o.name; this.isBot=o.isBot; this.onEvent=o.onEvent||(()=>{});
     this.d = FAST ? {bot:30,trick:50,hand:120} : {bot:1000,trick:1700,hand:6500};
     this.speed=1;                                   // host-controlled multiplier for bot/animation pace
+    this.turnLimit=o.turnLimit||0;                  // seconds a human gets per move (0 = no limit)
+    this.onIdle=o.onIdle||(()=>{});                 // called when a player runs out of time twice in a row
+    this.idle=[0,0,0,0]; this.turnTimer=null; this.turnKey=null; this.turnDeadline=0;
     this.botTimer=null; this.advTimer=null; this.dead=false;
     this.newGame();
   }
-  destroy(){ this.dead=true; clearTimeout(this.botTimer); clearTimeout(this.advTimer); }
+  destroy(){ this.dead=true; clearTimeout(this.botTimer); clearTimeout(this.advTimer); clearTimeout(this.turnTimer); }
   newGame(){
     clearTimeout(this.advTimer);
+    this.idle=[0,0,0,0];
     this.scores=[0,0]; this.dealer=Math.floor(Math.random()*4); this.winnerTeam=-1;
     this.history=this.history||[]; this.handNo=0;      // history survives "Play again"
     this.log('New game — first team to 10 points wins','game');
@@ -983,9 +1012,36 @@ class Game {
     this.log(`${cname(this.upcard)} is turned up.`);
     this.changed();
   }
-  changed(){ if(this.dead) return; this.emit(); this.poke(); }
+  changed(){ if(this.dead) return; this.armTurnTimer(); this.emit(); this.poke(); }
+  // Turn timer: a human who takes too long gets a move made for them (see timeUp).
+  // Only restarts when it's actually a new turn, so other updates (chat, reactions…) don't reset it.
+  armTurnTimer(){
+    const live=!this.dead && this.turn>=0 && ['bid1','bid2','discard','play'].includes(this.phase);
+    const key=live ? [this.handNo,this.phase,this.turn,this.trick.length,this.tricksWon.join('')].join('|') : null;
+    if(!key || this.isBot(this.turn) || !this.turnLimit){
+      clearTimeout(this.turnTimer); this.turnTimer=null; this.turnKey=null; this.turnDeadline=0; return;
+    }
+    if(key===this.turnKey) return;
+    clearTimeout(this.turnTimer);
+    this.turnKey=key; this.turnDeadline=Date.now()+this.turnLimit*1000;
+    this.turnTimer=setTimeout(()=>this.timeUp(key),this.turnLimit*1000);
+  }
+  timeUp(key){
+    if(this.dead || key!==this.turnKey) return;
+    const s=this.turn, hand=this.hands[s];
+    this.idle[s]++;
+    this.log(`⏱ ${this.name(s)} ran out of time — a move was made for them.`);
+    // bidding: just pass (unless the dealer is stuck and must name a suit); cards: the bot's choice
+    let a = this.phase==='bid1' ? {type:'pass'}
+          : this.phase==='bid2' ? (s===this.dealer ? this.botChoose(s,hand) : {type:'pass'})
+          : this.botChoose(s,hand);
+    if(this.act(s,a)){ this.botMove(); }                        // safety net, same as a bot's
+    if(this.idle[s]>=2) this.onIdle(s);
+  }
+  setTurnLimit(sec){ this.turnLimit=sec; this.turnKey=null; this.armTurnTimer(); }
   poke(){
     clearTimeout(this.botTimer);
+    this.armTurnTimer();
     if(this.dead || this.turn<0) return;
     if(!['bid1','bid2','discard','play'].includes(this.phase)) return;
     if(!this.isBot(this.turn)) return;
@@ -1178,6 +1234,7 @@ class Game {
       trump:this.trump, maker:this.maker, alone:this.alone, sitOut:this.sitOut,
       trick:this.trick, trickWinner:this.trickWinner, tricksWon:this.tricksWon, scores:this.scores,
       counts:this.hands.map(h=>h.length), hand:my, legal, history:this.history.slice(-250),
+      turnLimit:this.turnLimit, turnLeft:this.turnDeadline ? Math.max(0,this.turnDeadline-Date.now()) : 0,
       message:this.message, handResult:this.handResult, winnerTeam:this.winnerTeam,
       hands: reveal ? this.hands : null, speed:this.speed
     };
@@ -1216,6 +1273,8 @@ const REACTIONS = ['👏','😂','😮','🔥','😭','😎','🤦','🎉'];    
 const EMOJI_RE = /^(?:\p{Extended_Pictographic}|\p{Emoji_Modifier}|\p{Regional_Indicator}|[\u200d\ufe0f\u20e3])+$/u;
 const isEmoji = e => typeof e==='string' && e.length<=16 && EMOJI_RE.test(e);
 const BIG_MODES = ['rain','giant'];
+const TURN_LIMITS = [0,30,60,90,120];                  // turn timer choices (seconds, 0 = off)
+const GRACE_SECONDS = 20;                              // wait this long for a disconnected player before a bot fills in
 // Custom avatars (made in the avatar studio). Only these DiceBear styles, and only simple option values,
 // are ever accepted — from anyone — and the image address is always rebuilt here from those values.
 const AV_STYLES = {'notionists':'Notionists','lorelei':'Lorelei','open-peeps':'Open Peeps','pixel-art':'Pixel Art','thumbs':'Thumbs','avataaars':'Avataaars'};
@@ -1265,6 +1324,8 @@ class Room {
     this.chat=[]; this.game=null;
     this.botChat=true; this.lastBotChat=0; this.botChatTimers=[];
     this.reacts=[]; this.reactSeq=0; this.lastReact=new Map();
+    this.turnLimit=60;                               // seconds per move for humans; the host can change it
+    this.graceTimers=new Map(); this.graceUntil=new Map();   // disconnected players: time left before a bot fills in
   }
   /* ---- emoji reactions (float up from the sender's seat) ---- */
   // kind: undefined = floating emoji · 'rain' / 'giant' = big moves
@@ -1347,21 +1408,49 @@ class Room {
     if(!key || Math.random()>=p) return;
     this.botSay(named!==undefined?named:pick(bots),key,true);
   }
-  seatOf(token){ return this.seats.findIndex(s=>s && !s.bot && s.token===token); }
+  // A player's seat stays theirs even while a bot plays it (autoplay), so they keep seeing their cards.
+  seatOf(token){ return this.seats.findIndex(s=>s && s.token && s.token===token); }
+  // Autoplay: a bot plays a human's seat. reason: 'away' (they asked), 'offline' (disconnected),
+  // 'idle' (ran out of time twice), 'host' (the host switched it on).
+  setAutopilot(i,on,reason){
+    const s=this.seats[i]; if(!s || !s.token) return;
+    if(on){ s.bot=true; s.wasHuman=true; s.reason=reason; }
+    else { s.bot=false; s.wasHuman=false; s.reason=null; if(this.game) this.game.idle[i]=0; }
+    if(this.game) this.game.poke();
+  }
   join(token,name,avatar){
     name=(typeof name==='string' && name.trim() ? name.trim() : 'Player').slice(0,16);
     avatar=cleanAvatar(avatar);
-    const m=this.members.get(token);
+    const m=this.members.get(token), returning=!!(m && !m.online);
     if(m){ m.online=true; m.name=name; m.avatar=avatar; } else this.members.set(token,{name,online:true,avatar});
-    const i=this.seatOf(token); if(i>=0) this.seats[i].name=name;
-    const held=this.seats.findIndex(s=>s && s.bot && s.wasHuman && s.token===token);
-    if(held>=0){ const s=this.seats[held]; s.bot=false; s.wasHuman=false; s.name=name; if(this.game) this.game.poke(); }
-    this.sys(`${name} joined`); this.broadcast();
+    this.cancelGrace(token);
+    const i=this.seatOf(token);
+    if(i>=0){
+      const s=this.seats[i]; s.name=name;
+      // back after a disconnect → take their seat back from the stand-in bot
+      if(s.bot && s.reason==='offline') this.setAutopilot(i,false);
+    }
+    this.sys(returning ? `${name} is back 👋` : `${name} joined`); this.broadcast();
   }
   leave(token){
-    const m=this.members.get(token); if(!m) return;
-    m.online=false; this.sys(`${m.name} disconnected`); this.broadcast();
+    const m=this.members.get(token); if(!m || !m.online) return;
+    m.online=false;
+    const i=this.seatOf(token);
+    if(this.game && i>=0 && !this.seats[i].bot){
+      // give them a little while to come back before a bot fills in
+      this.sys(`${m.name} disconnected — a bot will play for them in ${GRACE_SECONDS}s unless they're back`);
+      this.graceUntil.set(token,Date.now()+GRACE_SECONDS*1000);
+      this.graceTimers.set(token,setTimeout(()=>{
+        this.cancelGrace(token);
+        const j=this.seatOf(token), mm=this.members.get(token);
+        if(this.game && j>=0 && mm && !mm.online && !this.seats[j].bot){
+          this.setAutopilot(j,true,'offline'); this.sys(`🤖 A bot is playing for ${mm.name} until they're back`); this.broadcast();
+        }
+      },GRACE_SECONDS*1000));
+    } else this.sys(`${m.name} disconnected`);
+    this.broadcast();
   }
+  cancelGrace(token){ clearTimeout(this.graceTimers.get(token)); this.graceTimers.delete(token); this.graceUntil.delete(token); }
   sys(text){ this.chat.push({sys:true,text}); if(this.chat.length>60) this.chat.shift(); }
   err(token,msg){ this.deliver(token,{t:'error',msg}); }
   startGame(){
@@ -1370,7 +1459,12 @@ class Room {
       emit:()=>this.broadcast(),
       name:i=>this.seats[i].name,
       isBot:i=>!!(this.seats[i] && this.seats[i].bot),
-      onEvent:(type,e)=>this.onGameEvent(type,e)
+      onEvent:(type,e)=>this.onGameEvent(type,e),
+      turnLimit:this.turnLimit,
+      onIdle:i=>{                                      // timed out twice in a row: probably stepped away
+        const s=this.seats[i]; if(!s || s.bot) return;
+        this.setAutopilot(i,true,'idle'); this.sys(`🤖 ${s.name} seems to be away — a bot is playing for them`); this.broadcast();
+      }
     });
     const bots=this.chattyBots();
     if(bots.length) this.botSay(pick(bots),'hello',true);
@@ -1398,11 +1492,23 @@ class Room {
           if(!isHost) return;
           if(msg.on && !s) this.seats[i]={bot:true,name:'Bot '+(i+1)};
           else if(!msg.on && s && s.bot) this.seats[i]=null;
-        } else if(s){
-          if(msg.on && isHost && !s.bot){ s.bot=true; s.wasHuman=true; }
-          else if(!msg.on && s.bot && s.wasHuman && (isHost || s.token===token)){ s.bot=false; }
-          this.game.poke();
+        } else if(s && s.token){
+          if(msg.on && isHost && !s.bot){ this.cancelGrace(s.token); this.setAutopilot(i,true,'host'); this.sys(`🤖 A bot is playing for ${s.name}`); }
+          else if(!msg.on && s.bot && (isHost || s.token===token)){ this.setAutopilot(i,false); this.sys(`${s.name} is back in control`); }
         }
+        break;
+      }
+      case 'away': {                                     // "let a bot play for me" / "I'm back"
+        if(!this.game || me<0) return;
+        const s=this.seats[me];
+        if(msg.on && !s.bot){ this.setAutopilot(me,true,'away'); this.sys(`🤖 ${s.name} stepped away — a bot is playing for them`); }
+        else if(!msg.on && s.bot){ this.setAutopilot(me,false); this.sys(`${s.name} is back in control`); }
+        break;
+      }
+      case 'timer': {                                    // seconds per move for humans (0 = no limit)
+        if(!isHost) return;
+        this.turnLimit=TURN_LIMITS.includes(+msg.v) ? +msg.v : 60;
+        if(this.game) this.game.setTurnLimit(this.turnLimit);
         break;
       }
       case 'start':
@@ -1413,8 +1519,8 @@ class Room {
         this.game.speed=[1,2,4].includes(msg.v)?msg.v:1; this.game.poke();
         break;
       case 'act':
-        if(!this.game||me<0) return;
-        { const e=this.game.act(me,msg.a||{}); if(e) this.err(token,e); }
+        if(!this.game||me<0||this.seats[me].bot) return;           // a bot is playing this seat right now
+        { const e=this.game.act(me,msg.a||{}); if(e) this.err(token,e); else this.game.idle[me]=0; }
         return;                                 // game broadcasts itself
       case 'newgame':
         if(!isHost||!this.game) return;
@@ -1422,6 +1528,7 @@ class Room {
       case 'lobby':
         if(!isHost||!this.game) return;
         this.game.destroy(); this.game=null; this.clearBotChat();
+        for(const t of [...this.graceTimers.keys()]) this.cancelGrace(t);
         this.seats=this.seats.map(s=>s && s.bot && !s.wasHuman ? null : (s&&s.wasHuman? {token:s.token,name:s.name,bot:false}:s));
         break;
       case 'chat': {
@@ -1463,10 +1570,13 @@ class Room {
       seats:this.seats.map(s=>{
         if(!s) return null;
         const m=s.token && this.members.get(s.token);
-        return {name:s.name,bot:!!s.bot,wasHuman:!!s.wasHuman,online:s.bot?true:!!(m&&m.online),
+        const until=s.token && this.graceUntil.get(s.token);
+        return {name:s.name,bot:!!s.bot,wasHuman:!!s.wasHuman,reason:s.reason||null,
+                online:s.token ? !!(m&&m.online) : true,
+                graceLeft:until ? Math.max(0,until-Date.now()) : 0,
                 avatar:(!s.bot||s.wasHuman) && m ? m.avatar||null : null};
       }),
-      watchers, chat:this.chat.slice(-30), botChat:this.botChat,
+      watchers, chat:this.chat.slice(-30), botChat:this.botChat, turnLimit:this.turnLimit,
       reacts:this.reacts.filter(r=>Date.now()-r.ts<4000),
       gifKey:store.get('euchre_giphy_key')||'',        // host's GIPHY key, so the whole room can search
       // cards are only shown face-up to watchers when no human is playing, so nobody can peek for a friend
@@ -1531,8 +1641,8 @@ const CONNECT_TIMEOUT=15000;
 
 const turnEndpoint = () => { const u=store.get('euchre_turn_endpoint')||TURN_ENDPOINT; return /^https:\/\/[^\s"'<>]+$/.test(u)?u:''; };
 function turnSettings(){                          // manual fallback: saved in this browser only
-  const app=String(store.get('euchre_turn_app')||'').trim().toLowerCase();
-  const key=String(store.get('euchre_turn_key')||'').trim();
+  const app=String(store.get('euchre_turn_app')||'bert-euchre').trim().toLowerCase();                 // built in (public)
+  const key=String(store.get('euchre_turn_key')||'32defd9b8323f23a78f061dc7e5c85fca057').trim();  // built in (public)
   return /^[a-z0-9_-]{1,63}$/.test(app) && /^[\w-]{8,128}$/.test(key) ? {app,key} : null;
 }
 async function fetchJson(url,ms=6000){
@@ -1609,6 +1719,8 @@ async function startHost(attempt=0){
   p.on('connection',c=>{
     c.on('data',m=>{
       if(!m||typeof m!=='object') return;
+      c.lastSeen=Date.now();                            // any message (including heartbeats) proves they're still there
+      if(m.t==='ping') return;
       if(m.t==='join'){
         if(typeof m.token!=='string' || m.token.length>64) return;
         const old=guestConns.get(m.token); if(old && old!==c){ try{old.close();}catch(e){} }
@@ -1620,6 +1732,50 @@ async function startHost(attempt=0){
     c.on('error',()=>{});
   });
   p.on('disconnected',()=>{ try{p.reconnect();}catch(e){} });
+}
+
+/* ---- heartbeats ----
+   Everyone says "still here" every few seconds. A dropped phone or sleeping laptop often doesn't close its
+   connection properly, so silence is how we notice: the host marks a silent player as disconnected, and a
+   player who stops hearing from the host tries to reconnect (and, if the host is gone, ends the game). */
+const HEARTBEAT_MS=4000, GUEST_SILENT_MS=20000, HOST_SILENT_MS=15000;   // (a false alarm about the host just reconnects)
+let lastHostAt=0;
+setInterval(()=>{
+  const now=Date.now();
+  if(role==='host'){
+    for(const [token,c] of guestConns){
+      if(!c.open) continue;
+      if(c.lastSeen && now-c.lastSeen>GUEST_SILENT_MS){ try{ c.close(); }catch(e){} if(guestConns.get(token)===c){ guestConns.delete(token); room.leave(token); } continue; }
+      try{ c.send({t:'ping'}); }catch(e){}
+    }
+  } else if(role==='guest' && hostConn && hostConn.open){
+    try{ hostConn.send({t:'ping'}); }catch(e){}
+    if(lastHostAt && now-lastHostAt>HOST_SILENT_MS){ try{ hostConn.close(); }catch(e){} }   // → reconnect / game over
+  }
+},HEARTBEAT_MS);
+
+// Leaving mid-game as the host ends it for everyone, so ask first.
+window.addEventListener('beforeunload',e=>{
+  if(role==='host' && room && room.game && room.game.phase!=='gameOver' &&
+     [...room.members].some(([t,m])=>t!==myToken && m.online)){ e.preventDefault(); e.returnValue=''; }
+});
+
+// The host is gone for good: tell the player plainly instead of retrying forever.
+let hostLostAt=0;
+const HOST_RETRY_MS=18000;                       // give up on a vanished host after this long
+function hostGone(){
+  clearTimeout(reconnectTimer); hostLostAt=0;
+  const wasPlaying=!!(S && S.game && S.game.phase!=='gameOver');
+  hostConn=null; if(peer){ try{peer.destroy();}catch(e){} } peer=null; role=null;
+  store.sset('euchre_room',null); S=null; render(); homeErr('');
+  notice('🔌 Game over', wasPlaying ? 'The host disconnected, so this game has ended.' : 'The host left, so the room has closed.');
+}
+function notice(title,text){
+  const old=$('#notice'); if(old) old.remove();
+  const n=document.createElement('div'); n.id='notice'; n.className='overlay';
+  n.innerHTML=`<div class="panel" role="alertdialog" aria-labelledby="noticeT"><h2 id="noticeT">${esc(title)}</h2><p>${esc(text)}</p>
+    <button type="button" data-do="noticeOk">OK</button></div>`;
+  document.body.appendChild(n);
 }
 
 let connRoute=null;                           // 'direct' | 'relay' once connected (shown to guests in the lobby)
@@ -1644,23 +1800,31 @@ async function joinGame(code,auto){
         ? "Couldn't connect to the host, even through the relay. Check both internet connections and try again."
         : "Couldn't connect to the host. Your networks are probably blocking a direct connection — "+
           "set up the free relay under “Playing from different networks?” below.";
-      if(auto && S){ toast('Still trying to reconnect…'); reconnectTimer=setTimeout(()=>joinGame(code,true),4000); }
+      if(auto && S){
+        if(hostLostAt && Date.now()-hostLostAt>HOST_RETRY_MS) return hostGone();
+        toast('Still trying to reconnect…'); reconnectTimer=setTimeout(()=>joinGame(code,true),2000);
+      }
       else { store.sset('euchre_room',null); S=null; render(); homeErr(why); }
     };
-    const failTimer=setTimeout(fail,CONNECT_TIMEOUT);
+    // reconnecting to a host we were just playing with should be quick; if it isn't, the host is probably gone
+    const failTimer=setTimeout(fail, auto && S ? 8000 : CONNECT_TIMEOUT);
     c.on('iceStateChanged',st=>{ if(st==='failed') fail(); });
     c.on('open',async()=>{
       clearTimeout(failTimer);
+      hostLostAt=0; lastHostAt=Date.now();
       store.sset('euchre_room',code);
       c.send({t:'join',token:myToken,name:myName(),avatar:myAvatar()});
       connRoute=await connectionRoute(c);
       if(!auto && connRoute) toast(connRoute==='relay'?'Connected through the relay ✓':'Connected directly ✓');
       if(S) render();
     });
-    c.on('data',onMessage);
+    c.on('data',m=>{ lastHostAt=Date.now(); onMessage(m); });
     c.on('close',()=>{
       if(hostConn!==c) return;
-      toast('Disconnected from host — retrying…');
+      hostConn=null;
+      if(!S) return;
+      if(!hostLostAt) hostLostAt=Date.now();
+      toast('Lost connection to the host — reconnecting…');
       reconnectTimer=setTimeout(()=>joinGame(code,true),2000);
     });
     c.on('error',()=>{});
@@ -1668,9 +1832,13 @@ async function joinGame(code,auto){
   p.on('error',e=>{
     $('#joinBtn').disabled=false;
     if(e.type==='peer-unavailable'){
+      if(auto && S) return hostGone();                 // we were in this game and the host's game no longer exists
       hostConn=null; store.sset('euchre_room',null); S=null; render();
       homeErr('No game found with that code. Is the host still online?');
-    } else if(auto) reconnectTimer=setTimeout(()=>joinGame(code,true),3000);
+    } else if(auto){
+      if(S && hostLostAt && Date.now()-hostLostAt>HOST_RETRY_MS) return hostGone();
+      reconnectTimer=setTimeout(()=>joinGame(code,true),3000);
+    }
     else homeErr(serverTrouble(e.type) ? "Couldn't reach the matchmaking server — check your internet connection and try again."
                                        : 'Connection problem: '+(e.type||e.message));
   });
@@ -1678,7 +1846,8 @@ async function joinGame(code,auto){
 
 function onMessage(m){
   if(m.t==='state'){
-    S=m.view; $('#joinBtn').disabled=false; homeErr('');
+    S=m.view; S._at=Date.now();                       // countdowns in the view are measured from this moment
+    $('#joinBtn').disabled=false; homeErr('');
     history.replaceState(null,'','#'+S.code);
     render();
     runEffects();
@@ -1844,7 +2013,7 @@ function runEffects(){
   for(const h of g.history) if(h.id>fxSeen && h.fx) playFx(h.fx,g);
   fxSeen=maxId;
 
-  const myTurn = S.me>=0 && g.turn===S.me;
+  const myTurn = S.me>=0 && g.turn===S.me && !(S.seats[S.me] && S.seats[S.me].bot);
   if(myTurn && lastTurn!==S.me){ Sound.play('turn'); if(document.hidden) document.title='🔔 Your turn! — Euchre'; }
   lastTurn=g.turn;
 }
@@ -1910,8 +2079,9 @@ function cardEl(c,cls='',attrs=''){
   const red=c.s==='H'||c.s==='D', s=SYM[c.s];
   const art = PIPS[c.r] ? `<div class="pips">${PIPS[c.r].map(([x,y])=>`<i style="left:${x}%;top:${y}%"${y>50?' class="up"':''}>${s}</i>`).join('')}</div>`
             : COURT[c.r] ? `<div class="court"><b>${COURT[c.r]}</b><i>${s}</i></div>` : '';
-  return `<div class="card ${red?'red':''} ${cls}" data-r="${c.r}" ${attrs}><div class="cr">${c.r}<br>${s}</div>${art}`+
-         `<div class="cs" data-s="${s}">${s}</div><div class="cr br">${c.r}<br>${s}</div></div>`;
+  const idx=`<span class="rk">${c.r}</span><span class="st">${s}</span>`;
+  return `<div class="card ${red?'red':''} ${cls}" data-r="${c.r}" ${attrs}><div class="cr">${idx}</div>${art}`+
+         `<div class="cs" data-s="${s}">${s}</div><div class="cr br">${idx}</div></div>`;
 }
 const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const suitBtnClass = s => (s==='H'||s==='D')?'red':'';
@@ -1929,12 +2099,15 @@ function render(){
   else renderTable();
 }
 
+// Suits in the history and chat: bigger, and a different colour each (♠ ink, ♣ green, ♥ red, ♦ blue)
+// so spades and clubs can't be mixed up at small sizes.
+const SUIT_CLASS={'♠':'S','♣':'C','♥':'H','♦':'D'};
+const suitSpans = html => html.replace(/[♠♣♥♦]/g,m=>`<span class="suit s${SUIT_CLASS[m]}">${m}</span>`);
 const clock = ts => new Date(ts).toLocaleTimeString([], {hour:'numeric',minute:'2-digit',second:'2-digit'});
 let histShown='';
 function renderHistory(){
   const el=$('#histlog'), atBottom=el.scrollTop+el.clientHeight>=el.scrollHeight-20 || !el.innerHTML;
-  const suits = s => s.replace(/[♥♦]/g,m=>`<span style="color:var(--soft-red)">${m}</span>`);
-  const html=S.game.history.map(h=>`<div class="h ${h.kind}"><time>${clock(h.ts)}</time><span>${suits(esc(h.text))}</span></div>`).join('');
+  const html=S.game.history.map(h=>`<div class="h ${h.kind}"><time>${clock(h.ts)}</time><span>${suitSpans(esc(h.text))}</span></div>`).join('');
   if(html===histShown) return;                             // unchanged → leave the scroll position alone
   histShown=html; el.innerHTML=html;
   if(atBottom) el.scrollTop=el.scrollHeight;
@@ -1948,7 +2121,7 @@ function renderChat(){
     const who=`<b>${c.bot?'🤖 ':''}${esc(c.name)}:</b>`;
     const gif=c.gif && cleanGifUrl(c.gif);                   // re-check: only render trusted GIF hosts
     return gif ? `<div>${who}<br><img class="chatgif" src="${esc(gif)}" alt="GIF" loading="lazy" referrerpolicy="no-referrer"></div>`
-               : `<div>${who} ${esc(c.text||'')}</div>`;
+               : `<div>${who} ${suitSpans(esc(c.text||''))}</div>`;
   }).join('');
   if(html===chatShown) return;                             // unchanged → don't reload GIFs
   chatShown=html; log.innerHTML=html;
@@ -1972,10 +2145,12 @@ function renderLobby(){
     return `<div class="seat ${mine?'me':''}" style="border-left:6px solid var(--t${i%2})"><div class="team"><span class="swatch t${i%2}"></span>Team ${i%2+1} · Seat ${i+1}</div>${body}</div>`;
   }).join('');
   setHtml($('#lobbySeats'),html);
-  $('#lobbyActions').innerHTML = S.isHost
+  setHtml($('#lobbyActions'), S.isHost
     ? `<button data-do="start">${S.me>=0?'Start game':S.seats.some(s=>s&&!s.bot)?'Start game (I\'ll watch)':'Start — watch the bots play'}</button>
-       <label class="alone"><input type="checkbox" id="botChatChk" ${S.botChat?'checked':''}> Bots chat</label>`
-    : `<span class="muted">Waiting for the host to start…</span>`;
+       <label class="alone"><input type="checkbox" id="botChatChk" ${S.botChat?'checked':''}> Bots chat</label>
+       <label class="alone" title="If a player takes longer than this, a move is made for them">⏱ Turn timer
+         <select id="timerSel">${TURN_LIMITS.map(v=>`<option value="${v}" ${S.turnLimit===v?'selected':''}>${v?v+' seconds':'Off'}</option>`).join('')}</select></label>`
+    : `<span class="muted">Waiting for the host to start… · ⏱ Turn timer: ${S.turnLimit?S.turnLimit+' seconds':'off'}</span>`);
   $('#lobbyNote').textContent = S.isHost
     ? 'Partners sit across from each other (Team 1 = seats 1 & 3, Team 2 = seats 2 & 4). Empty seats become bots when you start. First to 10 wins. Don\'t sit down if you just want to watch.'
     : '';
@@ -2025,16 +2200,42 @@ function pod(seat,g){
   const b=[];
   if(g.maker===seat) b.push(`<span class="badge">${g.alone?'Alone ':'Maker '}${SYM[g.trump]}</span>`);
   if(out) b.push('<span class="badge b2">Sitting out</span>');
+  if(s.bot && s.wasHuman) b.push(`<span class="badge b2">🤖 ${s.reason==='offline'?'Bot (offline)':s.reason==='away'||s.reason==='idle'?'Bot (away)':'Bot playing'}</span>`);
+  else if(!s.bot && !s.online) b.push(s.graceLeft
+    ? `<span class="badge warn">📡 Reconnecting <span data-until="${S._at+s.graceLeft}"></span></span>`
+    : '<span class="badge warn">📡 Offline</span>');
   const backs = out ? '' : g.hands
     ? sortHand(g.hands[seat],g.trump).map(c=>cardEl(c,'mini')).join('')      // watching bots: face-up
     : Array.from({length:g.counts[seat]},()=>'<div class="card back"></div>').join('');
-  return `<div class="pod ${g.turn===seat?'turn':''} ${out?'out':''}">
-    <div class="pn"><span class="avwrap">${avatar(seat,s)}${ordCircle(seat,g)}</span><span>${esc(s.name)}${!s.online?' ⚠':''}</span></div>
+  return `<div class="pod ${g.turn===seat?'turn':''} ${out?'out':''} ${s.bot&&s.wasHuman||!s.online?'dimmed':''}">
+    <div class="pn"><span class="avwrap">${avatar(seat,s)}${ordCircle(seat,g)}</span><span>${esc(s.name)}</span></div>
     <div>${b.join('')}</div>
     <div class="backs">${backs}</div>
-    ${S.isHost && !s.bot && seat!==S.me && !s.online ? `<button class="sec" style="margin-top:6px;padding:.2em .6em" data-do="bot" data-seat="${seat}" data-on="1">Bot takes over</button>`:''}
-    ${s.bot && s.wasHuman && (S.isHost||S.me===seat)?`<button class="sec" style="margin-top:6px;padding:.2em .6em" data-do="bot" data-seat="${seat}" data-on="0">Take back</button>`:''}
+    ${g.turn===seat && !s.bot ? timerBar(g) : ''}
+    ${S.isHost && !s.bot && seat!==S.me && !s.online ? `<button class="sec pod-btn" data-do="bot" data-seat="${seat}" data-on="1">🤖 Bot now</button>`:''}
+    ${s.bot && s.wasHuman && S.isHost && seat!==S.me ?`<button class="sec pod-btn" data-do="bot" data-seat="${seat}" data-on="0">Give back</button>`:''}
   </div>`;
+}
+// Live countdowns: any element with data-until (a local timestamp) shows the seconds left.
+// On your own turn it turns red for the last 10 seconds, with one warning beep.
+let warnedFor=0;
+function tickTimers(){
+  const now=Date.now();
+  document.querySelectorAll('[data-until]').forEach(el=>{
+    const until=+el.dataset.until, left=Math.max(0,Math.ceil((until-now)/1000));
+    const txt = el.classList.contains('tleft') ? `⏱ ${left}s` : `${left}s`;
+    if(el.textContent!==txt) el.textContent=txt;
+    const hurry = left<=10;
+    el.classList.toggle('hurry',hurry);
+    if(hurry && el.dataset.mine && left>0 && warnedFor!==until){ warnedFor=until; Sound.play('turn'); }
+  });
+}
+setInterval(tickTimers,250);
+// A bar that drains over the time left for this turn (restarts at the right spot if redrawn).
+function timerBar(g){
+  if(!g.turnLeft || !g.turnLimit) return '';
+  const total=g.turnLimit*1000, left=Math.max(0,S._at+g.turnLeft-Date.now());
+  return `<div class="tbar" title="Time left for this move"><i style="animation-duration:${total}ms;animation-delay:-${total-left}ms"></i></div>`;
 }
 
 // What the table currently shows — lets renderTable animate only what changed.
@@ -2061,10 +2262,13 @@ function renderTable(){
   const order=[1,2,3,0].map(n=>(g.dealer+n)%4).map(i=>
     `<div class="chip ${g.turn===i?'turn':''} ${g.sitOut===i?'out':''}">${ordCircle(i,g)}<span class="n">${nm(i)}${i===S.me?' (you)':''}</span></div>`).join('');
   const trump = g.trump
-    ? `Trump: <span style="${'HD'.includes(g.trump)?'color:var(--soft-red)':''}">${SYM[g.trump]} ${SUIT_NAME[g.trump]}</span>`
+    ? `Trump: <span style="${'HD'.includes(g.trump)?'color:var(--soft-red)':''}"><span class="trumpsym">${SYM[g.trump]}</span> ${SUIT_NAME[g.trump]}</span>`
     : `<span class="muted">Bidding…</span>`;
+  const tl = g.turnLimit ? g.turnLimit+'s' : 'off';
   const speed = S.isHost ? `<span class="speed">Bot speed ${[1,2,4].map(v=>
-    `<button class="${g.speed===v?'':'sec'}" data-do="speed" data-v="${v}">${v}×</button>`).join('')}</span>` : '';
+    `<button class="${g.speed===v?'':'sec'}" data-do="speed" data-v="${v}">${v}×</button>`).join('')}
+    <button class="sec" data-do="timerCycle" title="Time each player gets per move (click to change)">⏱ ${tl}</button></span>`
+    : `<span class="speed" title="Time each player gets per move">⏱ Turn timer: ${tl}</span>`;
   const mute=`<button class="sec iconbtn" data-do="mute" title="${Sound.muted?'Sound off':'Sound on'}">${Sound.muted?'🔇':'🔊'}</button>`;
   const themeBtn=`<button class="sec iconbtn" data-do="themes" title="Change theme">🎨</button>`;
   $('#score').innerHTML=`${team(0)}<div class="mid"><div class="trump">${trump} · first to 10${mute}${themeBtn}</div>${speed}<div class="order">${order}</div></div>${team(1)}`;
@@ -2076,8 +2280,13 @@ function renderTable(){
 
   // my own position, above my hand
   // (watchers see the bottom seat's player here instead)
+  // …with a switch to let a bot play for you while you step away
+  const mine = S.me>=0 ? S.seats[S.me] : null, autoMe = !!(mine && mine.bot);
+  const autoBtn = !mine || g.phase==='gameOver' ? ''
+    : autoMe ? ` <span class="badge b2">🤖 Autoplay on</span><button type="button" class="mini-btn" data-do="away" data-on="0">✋ I'm back</button>`
+             : `<button type="button" class="sec mini-btn" data-do="away" data-on="1" title="A bot plays your cards until you come back">🤖 Autoplay</button>`;
   const meHtml = S.me>=0
-    ? `<div class="me-pod ${g.turn===S.me?'turn':''}"><span class="avwrap">${avatar(S.me,S.seats[S.me])}${ordCircle(S.me,g)}</span> You${g.maker===S.me?` <span class="badge">${g.alone?'Alone ':'Maker '}${SYM[g.trump]}</span>`:''}</div>`
+    ? `<div class="me-pod ${g.turn===S.me&&!autoMe?'turn':''} ${autoMe?'dimmed':''}"><span class="avwrap">${avatar(S.me,mine)}${ordCircle(S.me,g)}</span> You${g.maker===S.me?` <span class="badge">${g.alone?'Alone ':'Maker '}${SYM[g.trump]}</span>`:''}${autoBtn}</div>`
     : pod(base,g);
   if(meHtml!==shown.meHtml){ $('#mePod').innerHTML=meHtml; shown.meHtml=meHtml; }   // keeps the turn pulse smooth
 
@@ -2103,13 +2312,18 @@ function renderTable(){
   if(centerKey!==shown.centerKey){ $('#center').innerHTML=c; shown.centerKey=centerKey; }
 
   // status + actions
-  const myTurn = g.turn===S.me && S.me>=0;
-  let status = g.message||'';
-  if(g.phase==='handEnd'&&g.handResult) status=g.handResult.text;
-  else if(myTurn) status={bid1:'Your bid',bid2:'Your bid',discard:'Pick a card to discard',play:'Your turn — play a card'}[g.phase]||status;
-  else if(g.turn>=0) status+=`  ·  waiting for ${S.seats[g.turn].name}…`;
-  $('#status').textContent=status;
+  const myTurn = !autoMe && g.turn===S.me && S.me>=0;
+  let status = esc(g.message||'');
+  if(g.phase==='handEnd'&&g.handResult) status=esc(g.handResult.text);
+  else if(autoMe && g.phase!=='gameOver') status='🤖 A bot is playing for you — press “I’m back” to take over.';
+  else if(myTurn){
+    status={bid1:'Your bid',bid2:'Your bid',discard:'Pick a card to discard',play:'Your turn — play a card'}[g.phase]||status;
+    if(g.turnLeft) status+=` <span class="tleft" data-until="${S._at+g.turnLeft}" data-mine="1"></span>`;   // live countdown
+  }
+  else if(g.turn>=0) status+=`  ·  waiting for ${esc(S.seats[g.turn].name)}…`;
+  $('#status').innerHTML=status;
   $('#status').classList.toggle('mine',myTurn);
+  tickTimers();
 
   let act='';
   if(myTurn && g.phase==='bid1'){
@@ -2124,7 +2338,7 @@ function renderTable(){
   $('#actions').innerHTML=act;
 
   // hand: fanned arc; unplayable cards dim only when you're actually choosing a card
-  const legal=new Set(g.legal), choosing=myTurn && (g.phase==='play'||g.phase==='discard');
+  const legal=new Set(autoMe?[]:g.legal), choosing=myTurn && (g.phase==='play'||g.phase==='discard');
   const cards=sortHand(g.hand,g.trump), mid=(cards.length-1)/2;
   let handHtml = cards.map((c,i)=>{
     const ok=legal.has(cid(c)), off=i-mid;
@@ -2173,6 +2387,9 @@ document.addEventListener('click',e=>{
     case 'ptab': pickerTab = isNaN(+d.tab) ? d.tab : +d.tab; renderPickerTab(); break;
     case 'sendgif': send({t:'gif',url:d.url}); closePicker(); break;
     case 'themes': openThemeMenu(b); break;
+    case 'away': send({t:'away',on:d.on==='1'}); break;
+    case 'timerCycle': if(S){ const i=TURN_LIMITS.indexOf(S.turnLimit); send({t:'timer',v:TURN_LIMITS[(i+1)%TURN_LIMITS.length]}); } break;
+    case 'noticeOk': { const n=$('#notice'); if(n) n.remove(); } break;
     case 'studio': openStudio(); break;
     case 'studioClose': closeStudio(); break;
     case 'studioSave': saveStudio(); break;
@@ -2193,6 +2410,7 @@ document.addEventListener('click',e=>{
 document.addEventListener('change',e=>{
   if(e.target.id==='aloneChk') goAlone=e.target.checked;
   if(e.target.id==='botChatChk') send({t:'botchat',on:e.target.checked});
+  if(e.target.id==='timerSel') send({t:'timer',v:+e.target.value});
 });
 
 $('#hostBtn').onclick=()=>{ store.set('euchre_name',myName()); startHost(); };
@@ -2512,7 +2730,7 @@ function showRelayStatus(){
   const t=turnSettings();
   $('#turnApp').value=store.get('euchre_turn_app')||''; $('#turnKey').value=store.get('euchre_turn_key')||'';
   $('#turnStatus').textContent = turnEndpoint() ? 'Secure relay server is set up ✓' + (t?' (plus a key saved in this browser)':'')
-    : t ? 'Relay saved in this browser.' : 'Not set up — direct connections only.';
+    : t ? (store.get('euchre_turn_app') ? 'Relay saved in this browser.' : 'Relay is built into this page ✓') : 'Not set up — direct connections only.';
 }
 $('#turnSave').onclick=async()=>{
   const app=$('#turnApp').value.trim().toLowerCase(), key=$('#turnKey').value.trim();
