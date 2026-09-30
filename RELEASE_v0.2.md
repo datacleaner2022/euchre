@@ -29,16 +29,21 @@ Friends disconnect. Phones fall asleep. Bert's router is older than Bert. The ga
 *   Anyone watching, including friends who show up late, sees **🪑 Take this seat** on any bot and can jump in mid-game with that hand.
 *   Bert now leaves games on purpose, so he can come back and take the winning seat.
 
-### 5. 🏆 Leaderboard & Rematches
-*   **🏆 Leaderboard** (on the scoreboard, in the lobby, and on the game-over screen):
+### 5. 📋 Scoreboard & Rematches
+*   **📋 Scoreboard** (on the scoreboard bar, in the lobby, and on the game-over screen) keeps track of **every hand of every game**:
+    *   **Each hand:** who dealt, and who called trump (with the suit, and whether they went alone).
+    *   **Tricks won** are labelled per team, like **T1 3 · T2 2**, in team colours. No more guessing who got the 3.
+    *   **Points** read like a sentence: "**Team 1** got **2 points**", with what happened underneath (made it, march: all 5 tricks, or euchre! the callers were stopped).
+    *   **The running score** is shown in team colours.
+    *   **Each game:** both teams sit right next to their score ("Piper & Bot 3 **6 – 3** Bot 2 & Bot 4"), with each number in its team's colour, plus the 🏆 winner. The current game shows live at the top, and finished games open with a tap.
     *   **Most wins:** everyone ranked, with 🥇🥈🥉 medals.
-    *   **Games:** every finished game with its time, teams, final score and winner, plus the current game live at the top.
     *   It lasts until the room closes, across every "Play again".
 *   **The game-over screen now shows all four seats.** Everyone picks **🔁 Play again** or **🏠 Back to lobby**:
     *   If everyone chooses Play again, a new game starts automatically.
     *   If anyone chooses the lobby, the whole table goes there to swap seats and teams.
     *   Bots and players on Autoplay count as ready. The host can still **▶ Start now** or **🏠 Lobby now**.
 *   No more "Waiting for the host…" while the host is in the kitchen.
+*   **Banners explain themselves:** **MARCH!** now says "All 5 tricks · Team 2 +2" ("alone" for a lone march), and **EUCHRE!** says "Callers stopped". Bert thought "March" was a typo. It isn't.
 
 ### 6. 👀 Viewers Welcome
 *   A **👀 watching** counter on the scoreboard. Hover over it to see who's watching.
@@ -55,7 +60,7 @@ Friends disconnect. Phones fall asleep. Bert's router is older than Bert. The ga
 - **🚪 Leave** (friends only): hand your seat to a bot and head home.
 - **🪑 Take this seat** (when watching): take over any bot's hand.
 - **⏱** on the scoreboard (host): set the turn timer to any number of seconds.
-- **🏆**: the leaderboard, any time.
+- **📋**: the scoreboard, any time.
 - **Game over?** Pick **🔁 Play again** or **🏠 Back to lobby** and wait for the others.
 
 ## 🧪 SECRET SWITCHES (For Testers)
@@ -64,7 +69,7 @@ Friends disconnect. Phones fall asleep. Bert's router is older than Bert. The ga
 
 ## ⚠️ KNOWN LIMITS
 - The game still runs in the **host's browser**. If the host closes the tab, the game ends, and friends are told so. Hosts who need a break should use **🤖 Autoplay** and leave the tab open.
-- The leaderboard lasts for the life of the room. A new room starts a fresh board.
+- The scoreboard lasts for the life of the room. A new room starts a fresh board.
 
 ---
 *"I lost 10 to 4. Then I pressed Play Again. Then I lost 10 to 3. The leaderboard remembers everything."*

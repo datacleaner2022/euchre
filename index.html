@@ -567,7 +567,7 @@ html:is([data-theme="light"],[data-theme="cat"]){--suit-C:#15803d;--suit-H:#dc26
 }
 
 /* ============================ LEADERBOARD ============================ */
-.studio.lb{width:min(720px,96vw)}
+.studio.lb{width:min(820px,96vw)}
 .lb-body{padding:16px;overflow:auto}
 .lb-ranks{display:flex;flex-direction:column;gap:6px}
 .lb-rank{display:grid;grid-template-columns:2.2em 1fr auto auto;gap:12px;align-items:center;padding:8px 12px;border-radius:var(--rb);background:var(--btn2)}
@@ -576,9 +576,28 @@ html:is([data-theme="light"],[data-theme="cat"]){--suit-C:#15803d;--suit-H:#dc26
 .lb-name{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lb-wins b{font-size:1.2rem;font-family:var(--display)}
 .lb-played{font-size:.8rem}
-.lb-row{display:grid;grid-template-columns:5em 1fr auto 1fr auto;gap:10px;align-items:center;padding:8px 10px;border-radius:var(--rb);
-  background:var(--btn2);margin-bottom:6px;font-size:.9rem}
-.lb-row.live{outline:2px dashed var(--gold);outline-offset:-2px}
+.lb-game{border-radius:var(--rb);background:var(--btn2);margin-bottom:8px;overflow:hidden}
+.lb-game.live{outline:2px dashed var(--gold);outline-offset:-2px}
+.lb-game summary{display:grid;grid-template-columns:5em 1fr auto;gap:10px;align-items:center;padding:8px 10px;cursor:pointer;font-size:.9rem;list-style:none}
+.lb-game summary::-webkit-details-marker{display:none}
+.lb-vs{display:flex;align-items:center;justify-content:center;gap:12px;min-width:0}
+.lb-vs .lb-team{flex:0 1 auto;min-width:0}
+.lb-score .c0{color:var(--t0)} .lb-score .c1{color:var(--t1)}
+.lb-score{padding:2px 10px;border-radius:var(--rb);background:rgba(0,0,0,.25)}
+.rd{width:100%;border-collapse:collapse;font-size:.82rem}
+.rd th{font-weight:600;opacity:.65;text-align:left;padding:4px 8px;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;border-top:1px solid var(--line)}
+.rd td{padding:5px 8px;border-top:1px solid var(--line);white-space:nowrap}
+.rd td.num{font-variant-numeric:tabular-nums;text-align:center}
+.rd small{opacity:.7}
+.rd .swatch{margin-right:4px}
+.pts-tag{display:inline-block;padding:0 7px;border-radius:99px;color:#fff;font-weight:700;font-size:.9em}
+.rd td.pts small{display:block;font-size:.78em;opacity:.65;margin-top:1px}
+.rd td.tks{white-space:nowrap}
+.tk{display:inline-block;padding:0 6px;margin-right:4px;border-radius:99px;font-size:.85em;border:1.5px solid}
+.tk.t0{border-color:var(--t0)} .tk.t1{border-color:var(--t1)}
+.tk b{font-size:1.1em}
+.rd .c0{color:var(--t0)} .rd .c1{color:var(--t1)}
+.pts-tag.t0{background:var(--t0)} .pts-tag.t1{background:var(--t1)}
 .lb-n{font-weight:800;display:flex;flex-direction:column;line-height:1.2}
 .lb-n small{font-weight:500;opacity:.65;font-size:.72em}
 .lb-team{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.75}
@@ -588,9 +607,12 @@ html:is([data-theme="light"],[data-theme="cat"]){--suit-C:#15803d;--suit-H:#dc26
 .lb-win{font-size:.8rem;font-weight:700;white-space:nowrap}
 .lb-empty{padding:10px 2px}
 @media (max-width:640px){
-  .lb-row{grid-template-columns:1fr auto 1fr;grid-template-areas:"n n w" "a s b"}
-  .lb-row .lb-n{grid-area:n;flex-direction:row;gap:8px;align-items:baseline}
-  .lb-row .lb-win{grid-area:w;text-align:right}
+  .lb-game summary{grid-template-columns:1fr auto;grid-template-areas:"n w" "v v"}
+  .lb-game summary .lb-vs{grid-area:v;gap:8px}
+  .lb-game summary .lb-n{grid-area:n;flex-direction:row;gap:8px;align-items:baseline}
+  .lb-game summary .lb-win{grid-area:w;text-align:right}
+  .rd{display:block;overflow-x:auto}
+  .rd th:nth-child(2),.rd td:nth-child(2){display:none}
   .lb-rank{grid-template-columns:2em 1fr auto}
   .lb-played{display:none}
 }
@@ -947,7 +969,7 @@ try{ document.documentElement.dataset.theme = localStorage.getItem('euchre_theme
     The host's browser runs the game, so the host needs to keep the tab open.
     Friends connect directly to it with the room code (or the shared link).
   </p>
-  <p class="credits muted">
+  <p class="credits muted"><b>Euchre with Friends v0.2</b> — “Bert Stays for One More Game”<br>
     Avatars by <a href="https://www.dicebear.com" target="_blank" rel="noopener">DiceBear</a>
     (<a href="https://www.dicebear.com/styles/notionists/" target="_blank" rel="noopener">Notionists</a> by Zoish,
     <a href="https://www.dicebear.com/styles/lorelei/" target="_blank" rel="noopener">Lorelei</a> by Lisa Wischofsky,
@@ -965,7 +987,7 @@ try{ document.documentElement.dataset.theme = localStorage.getItem('euchre_theme
   <h1>Lobby</h1>
   <div class="panel row" style="justify-content:space-between">
     <div><div class="muted">Room code</div><div class="code" id="lobbyCode"></div></div>
-    <div class="row"><button class="sec" data-do="leader">🏆 Leaderboard</button><button class="sec" data-do="studio">🧑‍🎨 Avatar</button><button class="sec" data-do="themes">🎨 Theme</button><button id="copyBtn" class="sec">Copy invite link</button></div>
+    <div class="row"><button class="sec" data-do="leader">📋 Scoreboard</button><button class="sec" data-do="studio">🧑‍🎨 Avatar</button><button class="sec" data-do="themes">🎨 Theme</button><button id="copyBtn" class="sec">Copy invite link</button></div>
   </div>
   <div class="seats" id="lobbySeats"></div>
   <div class="row" id="lobbyActions"></div>
@@ -1075,6 +1097,7 @@ class Game {
   newGame(){
     clearTimeout(this.advTimer);
     this.idle=[0,0,0,0];
+    this.rounds=[];                                   // every hand of this game, for the scoreboard
     this.scores=[0,0]; this.dealer=Math.floor(Math.random()*4); this.winnerTeam=-1;
     this.history=this.history||[]; this.handNo=0;      // history survives "Play again"
     this.log('New game — first team to 10 points wins','game');
@@ -1234,13 +1257,15 @@ class Game {
     let pts, team, text;
     if(tt[mt]>=3){
       team=mt; pts = tt[mt]===5 ? (this.alone?4:2) : 1;
-      text = `${this.teamNames(mt)} made it with ${tt[mt]} tricks: +${pts}${tt[mt]===5?' (march!)':''}`;
+      text = `${this.teamNames(mt)} made it with ${tt[mt]} tricks: +${pts}${tt[mt]===5?(this.alone?' (lone march — all 5 tricks alone!)':' (march — all 5 tricks!)'):''}`;
     } else {
       team=dt; pts=2;
       text = `${this.teamNames(dt)} EUCHRED ${this.teamNames(mt)}: +2`;
     }
     this.scores[team]+=pts;
     this.handResult={text,team,pts};
+    this.rounds.push({hand:this.handNo, dealer:this.name(this.dealer), maker:this.name(this.maker), makerTeam:mt,
+      trump:this.trump, alone:this.alone, tricks:tt, team, pts, euchred:team!==mt, march:tt[mt]===5, scores:[...this.scores]});
     this.log(text,'result',{type:'hand',team,pts,makerTeam:mt,euchred:team!==mt,march:tt[mt]===5,alone:this.alone});
     this.log(`Score — Team 1: ${this.scores[0]} · Team 2: ${this.scores[1]}`,'score');
     this.turn=-1;
@@ -1322,7 +1347,7 @@ class Game {
       upcard:this.phase==='bid1'?this.upcard:null, turnedDown:this.turnedDown,
       trump:this.trump, maker:this.maker, alone:this.alone, sitOut:this.sitOut,
       trick:this.trick, trickWinner:this.trickWinner, tricksWon:this.tricksWon, scores:this.scores,
-      counts:this.hands.map(h=>h.length), hand:my, legal, history:this.history.slice(-250),
+      counts:this.hands.map(h=>h.length), hand:my, legal, history:this.history.slice(-250), rounds:this.rounds,
       turnLimit:this.turnLimit, turnLeft:this.turnDeadline ? Math.max(0,this.turnDeadline-Date.now()) : 0,
       message:this.message, handResult:this.handResult, winnerTeam:this.winnerTeam,
       hands: reveal ? this.hands : null, speed:this.speed
@@ -1558,8 +1583,8 @@ class Room {
   recordResult(team){
     const g=this.game, names=[0,1,2,3].map(i=>this.seats[i]?this.seats[i].name:'?');
     this.results.push({n:this.results.length+1,at:Date.now(),teams:[[names[0],names[2]],[names[1],names[3]]],
-      bots:[0,1,2,3].map(i=>!!(this.seats[i]&&this.seats[i].bot&&!this.seats[i].wasHuman)),scores:[...g.scores],winner:team});
-    if(this.results.length>100) this.results.shift();
+      bots:[0,1,2,3].map(i=>!!(this.seats[i]&&this.seats[i].bot&&!this.seats[i].wasHuman)),scores:[...g.scores],winner:team,rounds:g.rounds.slice()});
+    if(this.results.length>40) this.results.shift();
   }
   // The players whose vote counts: seated people who are online and not on autoplay/away.
   rematchVoters(){ return this.seats.filter(s=>s && s.token && !s.bot && this.members.get(s.token) && this.members.get(s.token).online); }
@@ -2198,10 +2223,10 @@ function playFx(f,g){
     }
     case 'hand':
       if(f.euchred){
-        banner('EUCHRE!',`${teamName(f.team)} +2`,'euchre');
+        banner('EUCHRE!',`Callers stopped · ${teamName(f.team)} +2`,'euchre');
         Sound.play(ours(f.team)?'fanfare':'sad'); if(ours(f.team)) confetti(90);
       } else if(f.march){
-        banner(f.alone?'LONE MARCH!':'MARCH!',`${teamName(f.team)} +${f.pts}`,'march');
+        banner(f.alone?'LONE MARCH!':'MARCH!',`All 5 tricks${f.alone?' alone':''} · ${teamName(f.team)} +${f.pts}`,'march');
         Sound.play(ours(f.team)?'fanfare':'sad'); if(ours(f.team)) confetti(70);
       } else Sound.play('point');
       floaty($('.tm.t'+f.team),`<div class="e">+${f.pts}</div>`,'plus');
@@ -2431,7 +2456,7 @@ function renderTable(){
     <button class="sec" data-do="timerCycle" title="Time each player gets per move — click to set any number of seconds">⏱ ${tl}</button></span>`
     : `<span class="speed" title="Time each player gets per move">⏱ Turn timer: ${tl}</span>`;
   const mute=`<button class="sec iconbtn" data-do="mute" title="${Sound.muted?'Sound off':'Sound on'}">${Sound.muted?'🔇':'🔊'}</button>`;
-  const themeBtn=`<button class="sec iconbtn" data-do="themes" title="Change theme">🎨</button><button class="sec iconbtn" data-do="leader" title="Leaderboard">🏆</button>`;
+  const themeBtn=`<button class="sec iconbtn" data-do="themes" title="Change theme">🎨</button><button class="sec iconbtn" data-do="leader" title="Scoreboard: every hand and every game">📋</button>`;
   const viewers = S.watchers.length ? `<span class="viewers" title="Watching: ${esc(S.watchers.join(', '))}">👀 ${S.watchers.length} watching</span>` : '';
   $('#score').innerHTML=`${team(0)}<div class="mid"><div class="trump">${trump} · first to 10${mute}${themeBtn}</div>${speed}${viewers}<div class="order">${order}</div></div>${team(1)}`;
   shown.scores=[...g.scores]; shown.tk=[tk(0),tk(1)];
@@ -2540,7 +2565,7 @@ function rematchHtml(){
     ? `<button data-do="rematch" data-choice="again" class="${S.myChoice==='again'?'sec picked':''}">${S.myChoice==='again'?'✓ Play again':'🔁 Play again'}</button>
        <button data-do="rematch" data-choice="lobby" class="sec ${S.myChoice==='lobby'?'picked':''}">${S.myChoice==='lobby'?'✓ Back to lobby':'🏠 Back to lobby'}</button>` : '';
   const host = S.isHost ? `<div class="row rm-host"><span class="muted">Host:</span><button class="sec" data-do="newgame">▶ Start now</button><button class="sec" data-do="lobby">🏠 Lobby now</button></div>` : '';
-  return `${list}<div class="row" style="justify-content:center;margin-top:10px">${pick}<button class="sec" data-do="leader">🏆 Leaderboard</button></div>${host}`+
+  return `${list}<div class="row" style="justify-content:center;margin-top:10px">${pick}<button class="sec" data-do="leader">📋 Scoreboard</button></div>${host}`+
     (S.me<0 ? '<div class="muted rm-note">Waiting for the players…</div>' : '');
 }
 
@@ -2909,22 +2934,23 @@ function saveStudio(){
 $('#nameIn').addEventListener('input',renderHomeAvatar);
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeStudio(); });
 
-/* ---- leaderboard ---- */
+/* ---- scoreboard (every hand of every game, plus who won) ---- */
 function openLeader(){
   closeLeader();
   const el=document.createElement('div'); el.id='leader'; el.className='overlay studio-wrap';
-  el.innerHTML=`<div class="studio lb" role="dialog" aria-modal="true" aria-label="Leaderboard">
-    <div class="st-head"><span>🏆 Leaderboard</span><button type="button" class="sec iconbtn" data-do="leaderClose" aria-label="Close">✕</button></div>
+  el.innerHTML=`<div class="studio lb" role="dialog" aria-modal="true" aria-label="Scoreboard">
+    <div class="st-head"><span>📋 Scoreboard</span><button type="button" class="sec iconbtn" data-do="leaderClose" aria-label="Close">✕</button></div>
     <div class="lb-body" id="lbBody"></div></div>`;
   document.body.appendChild(el);
   el.addEventListener('click',e=>{ if(e.target===el) closeLeader(); });
   renderLeader();
 }
 function closeLeader(){ const l=$('#leader'); if(l) l.remove(); }
+const openGames=new Set();                         // which finished games are expanded (remembered while open)
 function renderLeader(){
   const body=$('#lbBody'); if(!body || !S) return;
   const res=S.results||[], g=S.game;
-  // wins per player (people and bots), most wins first
+  // most wins per player
   const tally=new Map();
   for(const r of res) r.teams.forEach((pair,t)=>pair.forEach((name,k)=>{
     const isBot=r.bots[t+2*k], key=name+(isBot?'|bot':'');
@@ -2933,21 +2959,37 @@ function renderLeader(){
   }));
   const ranks=[...tally.values()].sort((a,b)=>b.wins-a.wins || a.played-b.played || a.name.localeCompare(b.name));
   const medal=i=>['🥇','🥈','🥉'][i]||`${i+1}.`;
-  const teamCell=(pair,t,win)=>`<span class="lb-team t${t} ${win?'won':''}"><span class="swatch t${t}"></span>${pair.map(esc).join(' &amp; ')}</span>`;
+  const tn=(pair,t)=>`<span class="lb-team t${t}"><span class="swatch t${t}"></span>${pair.map(esc).join(' &amp; ')}</span>`;
+  const sym=t=>`<span class="suit s${t}">${SYM[t]}</span>`;
+  // one table row per hand: who dealt, who called what, tricks, points, running score
+  const roundRows=rounds=>rounds.length ? `<table class="rd"><thead><tr><th>Hand</th><th>Dealer</th><th>Called by</th><th>Tricks won</th><th>Points</th><th>Score</th></tr></thead><tbody>${
+    rounds.map(r=>{
+      const what = r.euchred ? 'euchre! the callers were stopped' : r.march ? (r.alone?'lone march: all 5 tricks alone':'march: all 5 tricks') : 'made it';
+      return `<tr><td>${r.hand}</td><td>${esc(r.dealer)}</td>
+        <td><span class="swatch t${r.makerTeam}"></span>${esc(r.maker)} ${sym(r.trump)}${r.alone?' <small>alone</small>':''}</td>
+        <td class="tks"><span class="tk t0">T1 <b>${r.tricks[0]}</b></span><span class="tk t1">T2 <b>${r.tricks[1]}</b></span></td>
+        <td class="pts"><span class="pts-tag t${r.team}">Team ${r.team+1}</span> got <b>${r.pts} point${r.pts===1?'':'s'}</b><small>${what}</small></td>
+        <td class="num"><b><span class="c0">${r.scores[0]}</span>–<span class="c1">${r.scores[1]}</span></b></td></tr>`;
+    }).join('')}</tbody></table>` : '<div class="muted lb-empty">No hands finished yet.</div>';
+  const gameBlock=(title,sub,teams,scores,winner,rounds,key,live)=>{
+    const open = live || openGames.has(key);
+    return `<details class="lb-game ${live?'live':''}" data-key="${key}" ${open?'open':''}>
+      <summary><span class="lb-n">${title}<small>${sub}</small></span>
+        <span class="lb-vs">${tn(teams[0],0)}<b class="lb-score"><span class="c0">${scores[0]}</span> – <span class="c1">${scores[1]}</span></b>${tn(teams[1],1)}</span>
+        <span class="lb-win">${winner===null?'⏳ playing':`🏆 Team ${winner+1}`}</span></summary>
+      ${roundRows(rounds)}</details>`;
+  };
   const live = g && g.phase!=='gameOver'
-    ? `<div class="lb-row live"><span class="lb-n">Now<small>in progress</small></span>${teamCell([S.seats[0].name,S.seats[2].name],0,false)}
-        <b class="lb-score">${g.scores[0]} – ${g.scores[1]}</b>${teamCell([S.seats[1].name,S.seats[3].name],1,false)}<span class="lb-win">⏳ playing</span></div>` : '';
-  const games=[...res].reverse().map(r=>`<div class="lb-row"><span class="lb-n">Game ${r.n}<small>${clock(r.at)}</small></span>
-      ${teamCell(r.teams[0],0,r.winner===0)}<b class="lb-score">${r.scores[0]} – ${r.scores[1]}</b>${teamCell(r.teams[1],1,r.winner===1)}
-      <span class="lb-win">🏆 Team ${r.winner+1}</span></div>`).join('');
+    ? gameBlock('Now','in progress',[[S.seats[0].name,S.seats[2].name],[S.seats[1].name,S.seats[3].name]],g.scores,null,g.rounds||[],'live',true) : '';
+  const games=[...res].reverse().map(r=>gameBlock(`Game ${r.n}`,clock(r.at),r.teams,r.scores,r.winner,r.rounds||[],'g'+r.n,false)).join('');
   setHtml(body, `
-    <div class="st-label">Most wins</div>
+    ${live}${games || (live?'':'<div class="muted lb-empty">Games will show up here as they’re played.</div>')}
+    <div class="st-label" style="margin-top:16px">Most wins</div>
     ${ranks.length ? `<div class="lb-ranks">${ranks.map((p,i)=>`<div class="lb-rank ${i<3&&p.wins?'top':''}"><span class="lb-medal">${p.wins?medal(i):'·'}</span>
         <span class="lb-name">${esc(p.name)}${p.bot?' 🤖':''}</span><span class="lb-wins"><b>${p.wins}</b> win${p.wins===1?'':'s'}</span>
         <span class="muted lb-played">${p.played} played</span></div>`).join('')}</div>`
-      : '<div class="muted lb-empty">No finished games yet — first team to 10 points wins!</div>'}
-    <div class="st-label" style="margin-top:16px">Games</div>
-    ${live}${games || (live?'':'<div class="muted lb-empty">Games will show up here as they finish.</div>')}`);
+      : '<div class="muted lb-empty">No finished games yet — first team to 10 points wins!</div>'}`);
+  body.querySelectorAll('details.lb-game:not(.live)').forEach(d=>d.ontoggle=()=>{ d.open?openGames.add(d.dataset.key):openGames.delete(d.dataset.key); });
 }
 
 /* ---- relay (TURN) setup panel ---- */
