@@ -27,7 +27,7 @@
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{background:var(--bg);background-attachment:fixed;color:var(--ink);
-  font:16px/1.4 var(--font);min-height:100vh}
+  font:1rem/1.4 var(--font);min-height:100vh}
 button{font:inherit;cursor:pointer;border:0;border-radius:var(--rb);padding:.55em 1em;background:var(--gold);color:var(--on-gold);font-weight:600}
 button:hover:not(:disabled){filter:brightness(1.08)}
 button:disabled{opacity:.4;cursor:not-allowed}
@@ -76,7 +76,8 @@ h1{margin:.2em 0;font-size:2rem;font-family:var(--display)}
   font-weight:800;font-size:.8rem;color:#fff;flex:none;border:2px solid rgba(255,255,255,.85);vertical-align:middle}
 .ord.t0{background-color:var(--t0)} .ord.t1{background-color:var(--t1)}
 .me-pod{display:flex;align-items:center;gap:8px;background:var(--panel);border-radius:var(--pill,99px);padding:4px 12px 4px 4px;font-weight:700}
-.pod .pn{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px}
+.pod .pn{font-weight:700;white-space:nowrap}
+.pod .pn>span:last-child{overflow:hidden;text-overflow:ellipsis;max-width:150px;padding:2px 0}  /* only the name is clipped, never the avatar */
 .badge{display:inline-block;font-size:.7rem;font-weight:700;padding:1px 6px;border-radius:99px;background:var(--gold);color:#222;margin:2px 2px 0}
 .badge.b2{background:#fff;color:#333}
 .backs{display:flex;justify-content:center;margin-top:6px;min-height:34px}
@@ -106,6 +107,20 @@ h1{margin:.2em 0;font-size:2rem;font-family:var(--display)}
 .dots i.won{background:var(--dot-won);opacity:1;box-shadow:0 0 6px var(--dot-won)}
 .mid{text-align:center;font-size:.85rem}
 .mid .trump{font-weight:700;margin-bottom:5px}
+.viewers{display:inline-block;margin:4px 0 2px 8px;padding:1px 9px;border-radius:99px;background:var(--btn2);font-size:.78rem;font-weight:600;cursor:default}
+.rm-list{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;text-align:left}
+.rm-chip{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:var(--rb);background:var(--btn2);font-size:.9rem;opacity:.75;min-width:0}
+.rm-chip b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rm-chip small{margin-left:auto;white-space:nowrap;font-weight:600}
+.rm-chip.ready{background:color-mix(in srgb,var(--dot-won) 30%,transparent);opacity:1}
+.rm-chip.lobby{background:color-mix(in srgb,var(--gold) 30%,transparent)}
+.rm-host{justify-content:center;margin-top:8px;font-size:.85rem}
+.overlay .panel .rm-list{width:min(480px,80vw)}
+button.picked{outline:2px solid var(--gold)}
+.rm-note{margin-top:8px;font-size:.85rem}
+.viewer-tag{font-weight:500;opacity:.65;font-size:.85em}
+.team-tag{display:inline-block;font-size:.7em;font-weight:700;color:#fff;padding:0 6px;border-radius:99px;vertical-align:.1em;text-shadow:none}
+.team-tag.t0{background:var(--t0)} .team-tag.t1{background:var(--t1)}
 .trumpsym{font-size:1.7em;line-height:.8;vertical-align:-.14em;text-shadow:0 1px 2px rgba(0,0,0,.35)}
 .order{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
 .chip{display:flex;align-items:center;gap:5px;padding:2px 8px 2px 2px;border-radius:99px;background:rgba(0,0,0,.3);font-size:.8rem;max-width:130px}
@@ -159,7 +174,7 @@ h1{margin:.2em 0;font-size:2rem;font-family:var(--display)}
 #hand .card.legal:hover{transform:translateY(calc(var(--fan-y,0px) - 16px)) rotate(var(--fan,0deg)) scale(1.04)}
 #hand.mine-turn .card.legal{outline:2px solid var(--gold)}
 
-.trick{position:relative;width:260px;height:230px}
+.trick{position:relative;width:calc(var(--card-w)*4.1);height:calc(var(--card-h)*2.55)}
 .trick .slot{position:absolute}
 .slot.p0{bottom:0;left:50%;transform:translateX(-50%)}
 .slot.p2{top:0;left:50%;transform:translateX(-50%)}
@@ -400,7 +415,7 @@ button.sec:active:not(:disabled){transform:translateY(2px)}
 .av.t1{--avc:var(--t1)}
 .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .av.lg{width:46px;height:46px;font-size:1.1rem}
-.avwrap{position:relative;display:inline-flex;flex:none}
+.avwrap{position:relative;display:inline-flex;flex:none;margin:3px 6px 5px 3px}
 .avwrap .ord{position:absolute;right:-7px;bottom:-5px;font-size:.62rem;width:1.65em;height:1.65em}
 .pod .pn{display:flex;align-items:center;justify-content:center;gap:9px}
 .seat .nm{display:flex;align-items:center;gap:10px}
@@ -505,6 +520,80 @@ html:is([data-theme="light"],[data-theme="cat"]){--suit-C:#15803d;--suit-H:#dc26
   .st-card{width:170px} .st-card img{width:130px;height:130px}
 }
 @media (prefers-reduced-motion:reduce){ .st-float{animation:none} }
+
+
+/* ============================ BIG SCREENS (laptops/desktops ≥1400px wide) ============================
+   Scale everything up: rem-based text follows the root size; cards, avatars and boxes get bigger too. */
+@media (min-width:1400px) and (min-height:850px){
+  html{font-size:18px}
+  :root{--card-w:80px;--card-h:112px}
+  #table{max-width:1250px}
+  #arena{grid-template-columns:1fr minmax(0,680px) 1fr;gap:16px}
+  #felt{height:clamp(230px,29vh,380px)}
+  .upcard .card{--card-w:104px;--card-h:146px}
+  .av{width:40px;height:40px;font-size:1rem}
+  .av.lg{width:54px;height:54px}
+  .avwrap .ord{font-size:.66rem}
+  .ord{font-size:.85rem}
+  .pod{min-width:150px;padding:10px 14px}
+  .pod .pn>span:last-child{max-width:210px}
+  .backs .card{width:30px;height:42px;margin-left:-17px}
+  .backs .card.mini{width:38px;height:53px;margin-left:-10px}
+  .backs{min-height:42px}
+  .tm .pts{font-size:2.3rem}
+  .dots i{width:13px;height:13px}
+  #chat,#history{width:clamp(320px,25vw,520px)}
+  #histlog{max-height:270px}
+  #chatlog{max-height:220px}
+  .chatgif{max-height:180px}
+  #chat .reactbar button{font-size:1.4rem}
+  #hand{padding-top:18px}
+}
+/* wide but short (e.g. a 1080p laptop at 125% zoom): bigger text and avatars, table shrinks to fit */
+@media (min-width:1300px) and (max-height:849px){
+  html{font-size:17px}
+  #table{max-width:1200px;gap:6px}
+  #felt{height:clamp(170px,24vh,260px)}
+  .av{width:36px;height:36px}
+  .pod{padding:6px 12px}
+  #chat,#history{width:clamp(300px,25vw,480px)}
+  #histlog{max-height:200px}
+  #chatlog{max-height:150px}
+}
+@media (min-width:1800px) and (min-height:900px){
+  html{font-size:19px}
+  :root{--card-w:86px;--card-h:120px}
+  #felt{height:clamp(240px,30vh,420px)}
+}
+
+/* ============================ LEADERBOARD ============================ */
+.studio.lb{width:min(720px,96vw)}
+.lb-body{padding:16px;overflow:auto}
+.lb-ranks{display:flex;flex-direction:column;gap:6px}
+.lb-rank{display:grid;grid-template-columns:2.2em 1fr auto auto;gap:12px;align-items:center;padding:8px 12px;border-radius:var(--rb);background:var(--btn2)}
+.lb-rank.top{background:linear-gradient(90deg,color-mix(in srgb,var(--gold) 30%,transparent),var(--btn2))}
+.lb-medal{font-size:1.35rem;text-align:center}
+.lb-name{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-wins b{font-size:1.2rem;font-family:var(--display)}
+.lb-played{font-size:.8rem}
+.lb-row{display:grid;grid-template-columns:5em 1fr auto 1fr auto;gap:10px;align-items:center;padding:8px 10px;border-radius:var(--rb);
+  background:var(--btn2);margin-bottom:6px;font-size:.9rem}
+.lb-row.live{outline:2px dashed var(--gold);outline-offset:-2px}
+.lb-n{font-weight:800;display:flex;flex-direction:column;line-height:1.2}
+.lb-n small{font-weight:500;opacity:.65;font-size:.72em}
+.lb-team{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.75}
+.lb-team.t1{text-align:right}
+.lb-team.won{opacity:1;font-weight:800}
+.lb-score{font-family:var(--display);font-size:1.1rem;white-space:nowrap}
+.lb-win{font-size:.8rem;font-weight:700;white-space:nowrap}
+.lb-empty{padding:10px 2px}
+@media (max-width:640px){
+  .lb-row{grid-template-columns:1fr auto 1fr;grid-template-areas:"n n w" "a s b"}
+  .lb-row .lb-n{grid-area:n;flex-direction:row;gap:8px;align-items:baseline}
+  .lb-row .lb-win{grid-area:w;text-align:right}
+  .lb-rank{grid-template-columns:2em 1fr auto}
+  .lb-played{display:none}
+}
 
 /* ============================ THEME PICKER ============================ */
 #themeMenu{position:fixed;z-index:50;width:260px;background:var(--modal);color:var(--ink);border:1px solid var(--line);
@@ -876,7 +965,7 @@ try{ document.documentElement.dataset.theme = localStorage.getItem('euchre_theme
   <h1>Lobby</h1>
   <div class="panel row" style="justify-content:space-between">
     <div><div class="muted">Room code</div><div class="code" id="lobbyCode"></div></div>
-    <div class="row"><button class="sec" data-do="studio">🧑‍🎨 Avatar</button><button class="sec" data-do="themes">🎨 Theme</button><button id="copyBtn" class="sec">Copy invite link</button></div>
+    <div class="row"><button class="sec" data-do="leader">🏆 Leaderboard</button><button class="sec" data-do="studio">🧑‍🎨 Avatar</button><button class="sec" data-do="themes">🎨 Theme</button><button id="copyBtn" class="sec">Copy invite link</button></div>
   </div>
   <div class="seats" id="lobbySeats"></div>
   <div class="row" id="lobbyActions"></div>
@@ -1274,7 +1363,17 @@ const EMOJI_RE = /^(?:\p{Extended_Pictographic}|\p{Emoji_Modifier}|\p{Regional_I
 const isEmoji = e => typeof e==='string' && e.length<=16 && EMOJI_RE.test(e);
 const BIG_MODES = ['rain','giant'];
 const TURN_LIMITS = [0,30,60,90,120];                  // turn timer choices (seconds, 0 = off)
-const GRACE_SECONDS = 20;                              // wait this long for a disconnected player before a bot fills in
+const GRACE_SECONDS = 20;
+// Any whole number of seconds from 10 to 600 is allowed (0 = off), not just the presets above.
+const validTurnLimit = v => { v=Math.round(Number(v)); return v===0 || (v>=10 && v<=600) ? v : null; };
+function askTurnLimit(){
+  const cur=S && S.turnLimit || 0;
+  const a=prompt('Seconds per move (10–600), or 0 to turn the timer off:', String(cur));
+  if(a===null || a.trim()==='') return;
+  const v=validTurnLimit(a);
+  if(v===null) return toast('Pick a number from 10 to 600 (or 0 for off)');
+  send({t:'timer',v});
+}                              // wait this long for a disconnected player before a bot fills in
 // Custom avatars (made in the avatar studio). Only these DiceBear styles, and only simple option values,
 // are ever accepted — from anyone — and the image address is always rebuilt here from those values.
 const AV_STYLES = {'notionists':'Notionists','lorelei':'Lorelei','open-peeps':'Open Peeps','pixel-art':'Pixel Art','thumbs':'Thumbs','avataaars':'Avataaars'};
@@ -1325,6 +1424,8 @@ class Room {
     this.botChat=true; this.lastBotChat=0; this.botChatTimers=[];
     this.reacts=[]; this.reactSeq=0; this.lastReact=new Map();
     this.turnLimit=60;                               // seconds per move for humans; the host can change it
+    this.results=[];                                 // finished games, for the leaderboard
+    this.rematch=new Map();                          // end-of-game votes: token -> 'again' | 'lobby'
     this.graceTimers=new Map(); this.graceUntil=new Map();   // disconnected players: time left before a bot fills in
   }
   /* ---- emoji reactions (float up from the sender's seat) ---- */
@@ -1358,7 +1459,7 @@ class Room {
     const t=setTimeout(()=>{
       const s=this.seats[seat];
       if(!this.botChat || !s || !s.bot || s.wasHuman) return;
-      this.chat.push({name:s.name,text:pick(BOT_LINES[key]),bot:true}); if(this.chat.length>60) this.chat.shift();
+      this.chat.push({name:s.name,text:pick(BOT_LINES[key]),bot:true,seat}); if(this.chat.length>60) this.chat.shift();
       this.broadcast();
     },delay);
     this.botChatTimers.push(t);
@@ -1422,7 +1523,7 @@ class Room {
     name=(typeof name==='string' && name.trim() ? name.trim() : 'Player').slice(0,16);
     avatar=cleanAvatar(avatar);
     const m=this.members.get(token), returning=!!(m && !m.online);
-    if(m){ m.online=true; m.name=name; m.avatar=avatar; } else this.members.set(token,{name,online:true,avatar});
+    if(m){ m.online=true; m.name=name; m.avatar=avatar; m.left=false; } else this.members.set(token,{name,online:true,avatar});
     this.cancelGrace(token);
     const i=this.seatOf(token);
     if(i>=0){
@@ -1435,6 +1536,9 @@ class Room {
   leave(token){
     const m=this.members.get(token); if(!m || !m.online) return;
     m.online=false;
+    // everyone still here already voted "Play again"? then don't make them wait for the one who left
+    if(this.game && this.game.phase==='gameOver' && this.rematch.size) this.resolveRematch();
+    if(m.left){ this.broadcast(); return; }            // they chose "Leave game" — already announced
     const i=this.seatOf(token);
     if(this.game && i>=0 && !this.seats[i].bot){
       // give them a little while to come back before a bot fills in
@@ -1450,6 +1554,30 @@ class Room {
     } else this.sys(`${m.name} disconnected`);
     this.broadcast();
   }
+  // Leaderboard: every finished game in this room (kept until the room closes)
+  recordResult(team){
+    const g=this.game, names=[0,1,2,3].map(i=>this.seats[i]?this.seats[i].name:'?');
+    this.results.push({n:this.results.length+1,at:Date.now(),teams:[[names[0],names[2]],[names[1],names[3]]],
+      bots:[0,1,2,3].map(i=>!!(this.seats[i]&&this.seats[i].bot&&!this.seats[i].wasHuman)),scores:[...g.scores],winner:team});
+    if(this.results.length>100) this.results.shift();
+  }
+  // The players whose vote counts: seated people who are online and not on autoplay/away.
+  rematchVoters(){ return this.seats.filter(s=>s && s.token && !s.bot && this.members.get(s.token) && this.members.get(s.token).online); }
+  rematchReady(){ const v=this.rematchVoters(); return v.length>0 && v.every(s=>this.rematch.has(s.token)); }
+  // Everyone has picked: all "again" → new game; anyone wants the lobby → everyone goes to the lobby.
+  resolveRematch(){
+    if(!this.rematchReady()) return false;
+    const toLobby=this.rematchVoters().some(s=>this.rematch.get(s.token)==='lobby');
+    this.rematch.clear();
+    if(toLobby){ this.sys('🏠 Back to the lobby'); this.toLobby(); this.broadcast(); }
+    else { this.sys('🔁 Everyone is in — new game!'); this.game.newGame(); }
+    return true;
+  }
+  toLobby(){
+    this.game.destroy(); this.game=null; this.clearBotChat(); this.rematch.clear();
+    for(const t of [...this.graceTimers.keys()]) this.cancelGrace(t);
+    this.seats=this.seats.map(s=>s && s.bot && !s.wasHuman ? null : (s&&s.wasHuman? {token:s.token,name:s.name,bot:false}:s));
+  }
   cancelGrace(token){ clearTimeout(this.graceTimers.get(token)); this.graceTimers.delete(token); this.graceUntil.delete(token); }
   sys(text){ this.chat.push({sys:true,text}); if(this.chat.length>60) this.chat.shift(); }
   err(token,msg){ this.deliver(token,{t:'error',msg}); }
@@ -1459,7 +1587,7 @@ class Room {
       emit:()=>this.broadcast(),
       name:i=>this.seats[i].name,
       isBot:i=>!!(this.seats[i] && this.seats[i].bot),
-      onEvent:(type,e)=>this.onGameEvent(type,e),
+      onEvent:(type,e)=>{ if(type==='game') this.recordResult(e.team); this.onGameEvent(type,e); },
       turnLimit:this.turnLimit,
       onIdle:i=>{                                      // timed out twice in a row: probably stepped away
         const s=this.seats[i]; if(!s || s.bot) return;
@@ -1505,9 +1633,27 @@ class Room {
         else if(!msg.on && s.bot){ this.setAutopilot(me,false); this.sys(`${s.name} is back in control`); }
         break;
       }
+      case 'leave': {                                    // a player leaves for good: a bot takes the seat, open for anyone
+        if(!this.game || me<0 || isHost) return;         // (the host can't leave without ending the game: use Autoplay)
+        const s=this.seats[me], m=this.members.get(token);
+        this.cancelGrace(token); if(m) m.left=true;
+        this.seats[me]={bot:true,name:'Bot '+(me+1)};
+        this.game.idle[me]=0; this.game.poke();
+        this.sys(`🚪 ${s.name} left the game — Bot ${me+1} took the seat. Anyone watching can take it over.`);
+        break;
+      }
+      case 'claim': {                                    // someone watching takes over a bot's seat mid-game
+        if(!this.game || me>=0) return this.err(token,'You already have a seat');
+        const i=msg.seat|0, s=this.seats[i], m=this.members.get(token);
+        if(i<0||i>3||!s||!s.bot||s.wasHuman) return this.err(token,"That seat isn't free");
+        this.seats[i]={token,name:m.name,bot:false}; m.left=false;
+        this.game.idle[i]=0; this.game.poke();
+        this.sys(`🪑 ${m.name} took over ${s.name}'s seat`);
+        break;
+      }
       case 'timer': {                                    // seconds per move for humans (0 = no limit)
         if(!isHost) return;
-        this.turnLimit=TURN_LIMITS.includes(+msg.v) ? +msg.v : 60;
+        this.turnLimit=validTurnLimit(msg.v) ?? 60;
         if(this.game) this.game.setTurnLimit(this.turnLimit);
         break;
       }
@@ -1524,16 +1670,20 @@ class Room {
         return;                                 // game broadcasts itself
       case 'newgame':
         if(!isHost||!this.game) return;
-        this.game.newGame(); return;
+        this.rematch.clear(); this.game.newGame(); return;
+      case 'rematch': {                                  // end-of-game vote: 'again' or 'lobby' (same choice again = undo)
+        if(!this.game || this.game.phase!=='gameOver' || me<0) return;
+        const c = msg.choice==='lobby' ? 'lobby' : 'again';
+        if(this.rematch.get(token)===c) this.rematch.delete(token); else this.rematch.set(token,c);
+        if(this.resolveRematch()) return;
+        break;
+      }
       case 'lobby':
         if(!isHost||!this.game) return;
-        this.game.destroy(); this.game=null; this.clearBotChat();
-        for(const t of [...this.graceTimers.keys()]) this.cancelGrace(t);
-        this.seats=this.seats.map(s=>s && s.bot && !s.wasHuman ? null : (s&&s.wasHuman? {token:s.token,name:s.name,bot:false}:s));
-        break;
+        this.toLobby(); break;
       case 'chat': {
         const text=String(msg.text||'').slice(0,200).trim(); if(!text) return;
-        this.chat.push({name:this.members.get(token).name,text}); if(this.chat.length>60) this.chat.shift();
+        this.chat.push({name:this.members.get(token).name,text,viewer:me<0,seat:me}); if(this.chat.length>60) this.chat.shift();
         this.onHumanChat(text);
         break;
       }
@@ -1546,7 +1696,7 @@ class Room {
       case 'gif': {
         const url=cleanGifUrl(msg.url); if(!url) return this.err(token,"That link isn't a GIPHY/Tenor GIF");
         if(this.spam(token,'gif',3000)) return this.err(token,'Easy there — one GIF every few seconds');
-        this.chat.push({name:this.members.get(token).name,gif:url}); if(this.chat.length>60) this.chat.shift();
+        this.chat.push({name:this.members.get(token).name,gif:url,viewer:me<0,seat:me}); if(this.chat.length>60) this.chat.shift();
         break;                                           // GIFs live in the chat only
       }
       case 'avatar': {                                   // someone saved a new look in the avatar studio
@@ -1576,7 +1726,12 @@ class Room {
                 graceLeft:until ? Math.max(0,until-Date.now()) : 0,
                 avatar:(!s.bot||s.wasHuman) && m ? m.avatar||null : null};
       }),
-      watchers, chat:this.chat.slice(-30), botChat:this.botChat, turnLimit:this.turnLimit,
+      watchers, chat:this.chat.slice(-30), botChat:this.botChat, turnLimit:this.turnLimit, results:this.results,
+      // all four seats for the game-over screen: people show their pick; bots and autoplay seats are always ready
+      rematch:this.seats.map((s,i)=>{ if(!s) return null; const m=s.token&&this.members.get(s.token);
+        const votes=!!(s.token && !s.bot && m && m.online);
+        return {seat:i,name:s.name,bot:!!s.bot,votes,choice:votes?this.rematch.get(s.token)||null:'again'}; }),
+      myChoice:this.rematch.get(token)||null,
       reacts:this.reacts.filter(r=>Date.now()-r.ts<4000),
       gifKey:store.get('euchre_giphy_key')||'',        // host's GIPHY key, so the whole room can search
       // cards are only shown face-up to watchers when no human is playing, so nobody can peek for a friend
@@ -1851,6 +2006,7 @@ function onMessage(m){
     history.replaceState(null,'','#'+S.code);
     render();
     runEffects();
+    if($('#leader')) renderLeader();
   } else if(m.t==='error') toast(m.msg);
 }
 
@@ -2118,7 +2274,9 @@ function renderChat(){
   const log=$('#chatlog'); const atBottom=log.scrollTop+log.clientHeight>=log.scrollHeight-20;
   const html=S.chat.map(c=>{
     if(c.sys) return `<div class="muted"><i>${esc(c.text)}</i></div>`;
-    const who=`<b>${c.bot?'🤖 ':''}${esc(c.name)}:</b>`;
+    const tag = c.viewer ? ' <span class="viewer-tag">(viewer)</span>'                       // who's talking: a viewer, or a player's team
+              : c.seat>=0 && c.seat<4 ? ` <span class="team-tag t${c.seat%2}">Team ${c.seat%2+1}</span>` : '';
+    const who=`<b>${c.bot?'🤖 ':''}${esc(c.name)}${tag}:</b>`;
     const gif=c.gif && cleanGifUrl(c.gif);                   // re-check: only render trusted GIF hosts
     return gif ? `<div>${who}<br><img class="chatgif" src="${esc(gif)}" alt="GIF" loading="lazy" referrerpolicy="no-referrer"></div>`
                : `<div>${who} ${suitSpans(esc(c.text||''))}</div>`;
@@ -2149,7 +2307,9 @@ function renderLobby(){
     ? `<button data-do="start">${S.me>=0?'Start game':S.seats.some(s=>s&&!s.bot)?'Start game (I\'ll watch)':'Start — watch the bots play'}</button>
        <label class="alone"><input type="checkbox" id="botChatChk" ${S.botChat?'checked':''}> Bots chat</label>
        <label class="alone" title="If a player takes longer than this, a move is made for them">⏱ Turn timer
-         <select id="timerSel">${TURN_LIMITS.map(v=>`<option value="${v}" ${S.turnLimit===v?'selected':''}>${v?v+' seconds':'Off'}</option>`).join('')}</select></label>`
+         <select id="timerSel">${TURN_LIMITS.map(v=>`<option value="${v}" ${S.turnLimit===v?'selected':''}>${v?v+' seconds':'Off'}</option>`).join('')}
+           ${TURN_LIMITS.includes(S.turnLimit)?'':`<option value="${S.turnLimit}" selected>${S.turnLimit} seconds</option>`}
+           <option value="custom">Custom…</option></select></label>`
     : `<span class="muted">Waiting for the host to start… · ⏱ Turn timer: ${S.turnLimit?S.turnLimit+' seconds':'off'}</span>`);
   $('#lobbyNote').textContent = S.isHost
     ? 'Partners sit across from each other (Team 1 = seats 1 & 3, Team 2 = seats 2 & 4). Empty seats become bots when you start. First to 10 wins. Don\'t sit down if you just want to watch.'
@@ -2213,6 +2373,7 @@ function pod(seat,g){
     <div class="backs">${backs}</div>
     ${g.turn===seat && !s.bot ? timerBar(g) : ''}
     ${S.isHost && !s.bot && seat!==S.me && !s.online ? `<button class="sec pod-btn" data-do="bot" data-seat="${seat}" data-on="1">🤖 Bot now</button>`:''}
+    ${S.me<0 && s.bot && !s.wasHuman && g.phase!=='gameOver' ? `<button class="pod-btn" data-do="claim" data-seat="${seat}">🪑 Take this seat</button>`:''}
     ${s.bot && s.wasHuman && S.isHost && seat!==S.me ?`<button class="sec pod-btn" data-do="bot" data-seat="${seat}" data-on="0">Give back</button>`:''}
   </div>`;
 }
@@ -2267,11 +2428,12 @@ function renderTable(){
   const tl = g.turnLimit ? g.turnLimit+'s' : 'off';
   const speed = S.isHost ? `<span class="speed">Bot speed ${[1,2,4].map(v=>
     `<button class="${g.speed===v?'':'sec'}" data-do="speed" data-v="${v}">${v}×</button>`).join('')}
-    <button class="sec" data-do="timerCycle" title="Time each player gets per move (click to change)">⏱ ${tl}</button></span>`
+    <button class="sec" data-do="timerCycle" title="Time each player gets per move — click to set any number of seconds">⏱ ${tl}</button></span>`
     : `<span class="speed" title="Time each player gets per move">⏱ Turn timer: ${tl}</span>`;
   const mute=`<button class="sec iconbtn" data-do="mute" title="${Sound.muted?'Sound off':'Sound on'}">${Sound.muted?'🔇':'🔊'}</button>`;
-  const themeBtn=`<button class="sec iconbtn" data-do="themes" title="Change theme">🎨</button>`;
-  $('#score').innerHTML=`${team(0)}<div class="mid"><div class="trump">${trump} · first to 10${mute}${themeBtn}</div>${speed}<div class="order">${order}</div></div>${team(1)}`;
+  const themeBtn=`<button class="sec iconbtn" data-do="themes" title="Change theme">🎨</button><button class="sec iconbtn" data-do="leader" title="Leaderboard">🏆</button>`;
+  const viewers = S.watchers.length ? `<span class="viewers" title="Watching: ${esc(S.watchers.join(', '))}">👀 ${S.watchers.length} watching</span>` : '';
+  $('#score').innerHTML=`${team(0)}<div class="mid"><div class="trump">${trump} · first to 10${mute}${themeBtn}</div>${speed}${viewers}<div class="order">${order}</div></div>${team(1)}`;
   shown.scores=[...g.scores]; shown.tk=[tk(0),tk(1)];
 
   // big faint trump symbol on the felt
@@ -2285,8 +2447,10 @@ function renderTable(){
   const autoBtn = !mine || g.phase==='gameOver' ? ''
     : autoMe ? ` <span class="badge b2">🤖 Autoplay on</span><button type="button" class="mini-btn" data-do="away" data-on="0">✋ I'm back</button>`
              : `<button type="button" class="sec mini-btn" data-do="away" data-on="1" title="A bot plays your cards until you come back">🤖 Autoplay</button>`;
+  const leaveBtn = mine && !S.isHost && g.phase!=='gameOver'
+    ? `<button type="button" class="sec mini-btn" data-do="leaveGame" title="Leave for good: a bot takes your seat and someone else can take it over">🚪 Leave</button>` : '';
   const meHtml = S.me>=0
-    ? `<div class="me-pod ${g.turn===S.me&&!autoMe?'turn':''} ${autoMe?'dimmed':''}"><span class="avwrap">${avatar(S.me,mine)}${ordCircle(S.me,g)}</span> You${g.maker===S.me?` <span class="badge">${g.alone?'Alone ':'Maker '}${SYM[g.trump]}</span>`:''}${autoBtn}</div>`
+    ? `<div class="me-pod ${g.turn===S.me&&!autoMe?'turn':''} ${autoMe?'dimmed':''}"><span class="avwrap">${avatar(S.me,mine)}${ordCircle(S.me,g)}</span> You${g.maker===S.me?` <span class="badge">${g.alone?'Alone ':'Maker '}${SYM[g.trump]}</span>`:''}${autoBtn}${leaveBtn}</div>`
     : pod(base,g);
   if(meHtml!==shown.meHtml){ $('#mePod').innerHTML=meHtml; shown.meHtml=meHtml; }   // keeps the turn pulse smooth
 
@@ -2346,7 +2510,8 @@ function renderTable(){
       `style="--fan:${off*5}deg;--fan-y:${off*off*3}px" ${ok?`data-card="${cid(c)}"`:''}`);
   }).join('');
   if(S.me>=0 && g.sitOut===S.me) handHtml='<div class="muted">You are sitting out this hand.</div>';
-  if(S.me<0) handHtml=`<div class="muted">👀 ${g.hands?'Watching the bots — all cards are shown face-up':'Spectating'}</div>`;
+  if(S.me<0) handHtml=`<div class="muted">👀 ${g.hands?'Watching the bots — all cards are shown face-up':'Spectating'}`+
+    `${S.seats.some(x=>x&&x.bot&&!x.wasHuman)&&g.phase!=='gameOver'?' · tap “🪑 Take this seat” on a bot to join in':''}</div>`;
   $('#hand').className = myTurn?'mine-turn':'';
   if(handHtml!==shown.handHtml){ $('#hand').innerHTML=handHtml; shown.handHtml=handHtml; }
 
@@ -2357,9 +2522,26 @@ function renderTable(){
     const names=[0,1].map(t=>`${esc(S.seats[t].name)} & ${esc(S.seats[t+2].name)}`);
     ov.innerHTML=`<div class="panel"><h2>${S.me<0?'Game over':(won?'🎉 You win!':'You lose')}</h2>
       <div>${names[g.winnerTeam]} win ${g.scores[g.winnerTeam]}–${g.scores[1-g.winnerTeam]}</div><br>
-      ${S.isHost?'<div class="row" style="justify-content:center"><button data-do="newgame">Play again</button><button class="sec" data-do="lobby">Back to lobby</button></div>':'<div class="muted">Waiting for the host…</div>'}</div>`;
+      ${rematchHtml()}</div>`;
     show('#overlay',true);
   } else show('#overlay',false);
+}
+
+// Game-over screen: everyone can vote to play again; the host can also start right away or go back to the lobby.
+function rematchHtml(){
+  const seats=(S.rematch||[]).filter(Boolean), voters=seats.filter(p=>p.votes), picked=voters.filter(p=>p.choice);
+  const label=p=> p.choice==='lobby' ? '🏠 Lobby' : p.choice==='again' ? (p.votes?'✓ Play again':'🤖 ready') : '… deciding';
+  const list=`<div class="rm-list">${seats.map(p=>`<span class="rm-chip t${p.seat%2} ${p.choice?'ready':''} ${p.choice==='lobby'?'lobby':''}">
+      <span class="swatch t${p.seat%2}"></span><b>${esc(p.name)}</b> <small>${label(p)}</small></span>`).join('')}</div>
+    <div class="muted rm-note">${!voters.length ? '' : picked.length<voters.length
+      ? `${picked.length} of ${voters.length} decided — once everyone picks: all “Play again” starts a new game, otherwise back to the lobby`
+      : 'Starting…'}</div>`;
+  const pick = S.me>=0 && voters.some(p=>p.seat===S.me)
+    ? `<button data-do="rematch" data-choice="again" class="${S.myChoice==='again'?'sec picked':''}">${S.myChoice==='again'?'✓ Play again':'🔁 Play again'}</button>
+       <button data-do="rematch" data-choice="lobby" class="sec ${S.myChoice==='lobby'?'picked':''}">${S.myChoice==='lobby'?'✓ Back to lobby':'🏠 Back to lobby'}</button>` : '';
+  const host = S.isHost ? `<div class="row rm-host"><span class="muted">Host:</span><button class="sec" data-do="newgame">▶ Start now</button><button class="sec" data-do="lobby">🏠 Lobby now</button></div>` : '';
+  return `${list}<div class="row" style="justify-content:center;margin-top:10px">${pick}<button class="sec" data-do="leader">🏆 Leaderboard</button></div>${host}`+
+    (S.me<0 ? '<div class="muted rm-note">Waiting for the players…</div>' : '');
 }
 
 /* ---- events ---- */
@@ -2377,6 +2559,7 @@ document.addEventListener('click',e=>{
     case 'bot': send({t:'bot',seat:+d.seat,on:d.on==='1'}); break;
     case 'start': send({t:'start'}); break;
     case 'newgame': send({t:'newgame'}); break;
+    case 'rematch': send({t:'rematch',choice:d.choice}); break;
     case 'lobby': send({t:'lobby'}); break;
     case 'speed': send({t:'speed',v:+d.v}); break;
     case 'react':
@@ -2388,7 +2571,20 @@ document.addEventListener('click',e=>{
     case 'sendgif': send({t:'gif',url:d.url}); closePicker(); break;
     case 'themes': openThemeMenu(b); break;
     case 'away': send({t:'away',on:d.on==='1'}); break;
-    case 'timerCycle': if(S){ const i=TURN_LIMITS.indexOf(S.turnLimit); send({t:'timer',v:TURN_LIMITS[(i+1)%TURN_LIMITS.length]}); } break;
+    case 'leader': openLeader(); break;
+    case 'leaderClose': closeLeader(); break;
+    case 'claim': send({t:'claim',seat:+d.seat}); break;
+    case 'leaveGame':
+      if(confirm('Leave this game? A bot will take your seat, and someone else can take it over.')){
+        send({t:'leave'});
+        setTimeout(()=>{                              // then disconnect and go back to the home screen
+          const c=hostConn; hostConn=null; try{ c && c.close(); }catch(e){}
+          try{ peer && peer.destroy(); }catch(e){} peer=null; role=null;
+          store.sset('euchre_room',null); S=null; render(); toast('You left the game — a bot took your seat.');
+        },400);
+      }
+      break;
+    case 'timerCycle': askTurnLimit(); break;
     case 'noticeOk': { const n=$('#notice'); if(n) n.remove(); } break;
     case 'studio': openStudio(); break;
     case 'studioClose': closeStudio(); break;
@@ -2410,7 +2606,10 @@ document.addEventListener('click',e=>{
 document.addEventListener('change',e=>{
   if(e.target.id==='aloneChk') goAlone=e.target.checked;
   if(e.target.id==='botChatChk') send({t:'botchat',on:e.target.checked});
-  if(e.target.id==='timerSel') send({t:'timer',v:+e.target.value});
+  if(e.target.id==='timerSel'){
+    if(e.target.value==='custom'){ e.target.value=String(S.turnLimit); askTurnLimit(); }
+    else send({t:'timer',v:+e.target.value});
+  }
 });
 
 $('#hostBtn').onclick=()=>{ store.set('euchre_name',myName()); startHost(); };
@@ -2709,6 +2908,47 @@ function saveStudio(){
 }
 $('#nameIn').addEventListener('input',renderHomeAvatar);
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeStudio(); });
+
+/* ---- leaderboard ---- */
+function openLeader(){
+  closeLeader();
+  const el=document.createElement('div'); el.id='leader'; el.className='overlay studio-wrap';
+  el.innerHTML=`<div class="studio lb" role="dialog" aria-modal="true" aria-label="Leaderboard">
+    <div class="st-head"><span>🏆 Leaderboard</span><button type="button" class="sec iconbtn" data-do="leaderClose" aria-label="Close">✕</button></div>
+    <div class="lb-body" id="lbBody"></div></div>`;
+  document.body.appendChild(el);
+  el.addEventListener('click',e=>{ if(e.target===el) closeLeader(); });
+  renderLeader();
+}
+function closeLeader(){ const l=$('#leader'); if(l) l.remove(); }
+function renderLeader(){
+  const body=$('#lbBody'); if(!body || !S) return;
+  const res=S.results||[], g=S.game;
+  // wins per player (people and bots), most wins first
+  const tally=new Map();
+  for(const r of res) r.teams.forEach((pair,t)=>pair.forEach((name,k)=>{
+    const isBot=r.bots[t+2*k], key=name+(isBot?'|bot':'');
+    const row=tally.get(key)||{name,bot:isBot,wins:0,played:0};
+    row.played++; if(r.winner===t) row.wins++; tally.set(key,row);
+  }));
+  const ranks=[...tally.values()].sort((a,b)=>b.wins-a.wins || a.played-b.played || a.name.localeCompare(b.name));
+  const medal=i=>['🥇','🥈','🥉'][i]||`${i+1}.`;
+  const teamCell=(pair,t,win)=>`<span class="lb-team t${t} ${win?'won':''}"><span class="swatch t${t}"></span>${pair.map(esc).join(' &amp; ')}</span>`;
+  const live = g && g.phase!=='gameOver'
+    ? `<div class="lb-row live"><span class="lb-n">Now<small>in progress</small></span>${teamCell([S.seats[0].name,S.seats[2].name],0,false)}
+        <b class="lb-score">${g.scores[0]} – ${g.scores[1]}</b>${teamCell([S.seats[1].name,S.seats[3].name],1,false)}<span class="lb-win">⏳ playing</span></div>` : '';
+  const games=[...res].reverse().map(r=>`<div class="lb-row"><span class="lb-n">Game ${r.n}<small>${clock(r.at)}</small></span>
+      ${teamCell(r.teams[0],0,r.winner===0)}<b class="lb-score">${r.scores[0]} – ${r.scores[1]}</b>${teamCell(r.teams[1],1,r.winner===1)}
+      <span class="lb-win">🏆 Team ${r.winner+1}</span></div>`).join('');
+  setHtml(body, `
+    <div class="st-label">Most wins</div>
+    ${ranks.length ? `<div class="lb-ranks">${ranks.map((p,i)=>`<div class="lb-rank ${i<3&&p.wins?'top':''}"><span class="lb-medal">${p.wins?medal(i):'·'}</span>
+        <span class="lb-name">${esc(p.name)}${p.bot?' 🤖':''}</span><span class="lb-wins"><b>${p.wins}</b> win${p.wins===1?'':'s'}</span>
+        <span class="muted lb-played">${p.played} played</span></div>`).join('')}</div>`
+      : '<div class="muted lb-empty">No finished games yet — first team to 10 points wins!</div>'}
+    <div class="st-label" style="margin-top:16px">Games</div>
+    ${live}${games || (live?'':'<div class="muted lb-empty">Games will show up here as they finish.</div>')}`);
+}
 
 /* ---- relay (TURN) setup panel ---- */
 // Ask the relay for a server address: if it hands back a "relay" candidate, friends on blocked networks can connect.
